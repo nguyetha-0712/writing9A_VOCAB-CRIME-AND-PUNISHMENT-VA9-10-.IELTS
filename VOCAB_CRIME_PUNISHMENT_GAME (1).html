@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulary Game – Crime &amp; Punishment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+*{font-family:'Be Vietnam Pro',sans-serif;box-sizing:border-box}
+html,body{height:100%;margin:0;padding:0}
+:root{--bg:#A8DADC;--white:#FFFFFF;--pink:#FFAFCC;--dark:#1a2a3a;--accent:#457B9D;--success:#2ecc71;--error:#e74c3c}
+.fade-in{animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.slide-in{animation:slideIn .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.pop-in{animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{0%{opacity:0;transform:scale(.6) rotate(-8deg)}60%{opacity:1;transform:scale(1.08) rotate(2deg)}100%{transform:scale(1) rotate(0)}}
+.bounce-in{animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bounceIn{0%{opacity:0;transform:translateY(-30px) scale(.8)}50%{opacity:1;transform:translateY(8px) scale(1.04)}100%{transform:translateY(0) scale(1)}}
+.float{animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.shake{animation:shake .45s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.card-hover{transition:transform .25s ease,box-shadow .25s ease}
+.card-hover:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 10px 28px rgba(0,0,0,.13)}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:12px 28px;font-weight:600;cursor:pointer;transition:all .2s ease;position:relative;overflow:hidden}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-2px) scale(1.03);box-shadow:0 6px 16px rgba(69,123,157,.35)}
+.btn-primary:active{transform:scale(.97)}
+.btn-pink{background:var(--pink);color:var(--dark);border:none;border-radius:12px;padding:12px 28px;font-weight:600;cursor:pointer;transition:all .2s ease}
+.btn-pink:hover{filter:brightness(.95);transform:translateY(-2px) scale(1.03);box-shadow:0 6px 16px rgba(255,175,204,.45)}
+.btn-pink:active{transform:scale(.97)}
+.progress-bar{height:8px;background:#e0e0e0;border-radius:9999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:9999px;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:shimmer 1.8s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.option-btn{border:2px solid #ddd;border-radius:12px;padding:14px 18px;cursor:pointer;transition:all .18s ease;background:#fff;text-align:left;width:100%;font-size:15px;transform:scale(1)}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:#f0f8ff;transform:translateX(4px) scale(1.01);box-shadow:0 4px 12px rgba(69,123,157,.15)}
+.option-btn.correct{border-color:var(--success);background:#d4edda;animation:correctPulse .5s ease}
+.option-btn.wrong{border-color:var(--error);background:#f8d7da;animation:shake .45s ease}
+@keyframes correctPulse{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+.confetti{position:fixed;pointer-events:none;z-index:9999;inset:0}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
+.input-field{border:2px solid #ddd;border-radius:12px;padding:12px 16px;font-size:16px;width:100%;transition:all .2s ease;outline:none}
+.input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(69,123,157,.15)}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;color:#fff;font-weight:600;z-index:9999;animation:toastIn .4s ease,toastOut .4s ease 2.1s forwards;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-24px) scale(.9)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+@keyframes toastOut{to{opacity:0;transform:translateX(-50%) translateY(-16px) scale(.95)}}
+.vocab-card{background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;border-left:4px solid var(--accent);transition:all .25s ease}
+.section-tag{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.match-item{border:2px solid #ddd;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all .2s;background:#fff;font-size:14px}
+.match-item.selected{border-color:var(--accent);background:#e8f4f8}
+.match-item.matched{border-color:var(--success);background:#d4edda;pointer-events:none}
+.match-item.wrong-match{border-color:var(--error);background:#f8d7da}
+.spinner{width:40px;height:40px;border:3px solid #e0e0e0;border-top:3px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.score-pop{display:inline-block;animation:scorePop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes scorePop{0%{transform:scale(1)}50%{transform:scale(1.35)}100%{transform:scale(1)}}
+.icon-spin:hover{animation:spin .6s ease}
+.home-emoji{animation:float 3.5s ease-in-out infinite}
+.next-btn-enter{animation:bounceIn .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.5)}50%{box-shadow:0 0 0 8px rgba(255,215,0,0)}}
+.master-glow{animation:glow 1.8s ease-in-out infinite}
+  </style>
+ </head>
+ <body class="h-full" style="background:linear-gradient(135deg,#A8DADC 0%,#e8f4f8 50%,#FFAFCC33 100%)">
+  <div id="app" class="h-full w-full overflow-auto"></div>
+  <script>
+console.log("✅ Game initialized – Vocabulary Crime & Punishment");
+
+// ===== VOCABULARY DATABASE =====
+// Chủ đề: Crime & Punishment – IELTS 7.0+ Target
+const VOCAB = [
+  {id:1,en:'commit a crime',ipa:'/kəˈmɪt ə kraɪm/',pos:'v',vi:'Phạm tội',enDef:'To do something that is against the law or morally wrong',collocations:['commit a serious crime','commit a minor offense','commit a crime out of desperation','commit fraud'],collocationVi:['phạm tội nghiêm trọng','phạm tội nhẹ','phạm tội vì tuyệt vọng','thực hiện gian lận'],synonyms:['commit an offense','break the law','engage in criminal conduct'],synonymsVi:['phạm tội','vi phạm pháp luật','tham gia hành vi phạm tội'],antonyms:['obey the law','abide by the law','follow the rules'],antonymsVi:['tuân thủ pháp luật','thực hiện đúng pháp luật','làm theo quy tắc'],wordFamily:['crime (n)','criminal (n/adj)','criminally (adv)'],wordFamilyVi:['tội phạm (danh từ)','tội phạm (danh từ/tính từ)','về mặt tội phạm (trạng từ)'],example:'"He committed a serious crime at a young age and was sentenced to prison."',exampleVi:'"Anh ta đã phạm một tội nghiêm trọng khi còn trẻ và bị kết án tù."'},
+  {id:2,en:'illegal activity',ipa:'/ɪˈliːɡəlækˈtɪvɪti/',pos:'n',vi:'Hành vi phạm pháp',enDef:'Any action that violates the law or is not permitted by law',collocations:['engage in illegal activity','illegal activity online','illegal activity involving drugs','illegal activity by minors'],collocationVi:['tham gia hành vi phạm pháp','hành vi phạm pháp trực tuyến','hành vi phạm pháp liên quan đến ma túy','hành vi phạm pháp của trẻ vị thành niên'],synonyms:['unlawful conduct','criminal behavior','illicit activity'],synonymsVi:['hành vi bất hợp pháp','hành vi phạm tội','hoạt động bất hợp pháp'],antonyms:['lawful activity','legal conduct','legitimate behavior'],antonymsVi:['hoạt động hợp pháp','hành vi hợp pháp','hành vi chính đáng'],wordFamily:['illegal (adj)','illegally (adv)','illegality (n)'],wordFamilyVi:['bất hợp pháp (tính từ)','một cách bất hợp pháp (trạng từ)','tính bất hợp pháp (danh từ)'],example:'"Many teenagers engage in illegal activities due to peer pressure."',exampleVi:'"Nhiều thiếu niên tham gia vào các hoạt động bất hợp pháp do áp lực bạn bè."'},
+  {id:3,en:'break the law',ipa:'/breɪk ðə lɔː/',pos:'v',vi:'Vi phạm pháp luật',enDef:'To do something that is not allowed by law',collocations:['break the law deliberately','break the law unintentionally','break the law and face consequences','break the law repeatedly'],collocationVi:['cố ý vi phạm pháp luật','vô tình vi phạm pháp luật','vi phạm pháp luật và đối mặt hậu quả','tái phạm vi phạm pháp luật'],synonyms:['violate the law','infringe the law','flout the law'],synonymsVi:['vi phạm luật','bội thường luật','coi thường pháp luật'],antonyms:['uphold the law','obey the law','abide by the law'],antonymsVi:['duy trì pháp luật','tuân theo pháp luật','tuân thủ pháp luật'],wordFamily:['law (n)','lawful (adj)','lawbreaker (n)'],wordFamilyVi:['pháp luật (danh từ)','hợp pháp (tính từ)','kẻ vi phạm pháp luật (danh từ)'],example:'"Anyone who breaks the law must face the appropriate punishment."',exampleVi:'"Bất kỳ ai vi phạm pháp luật đều phải đối mặt với hình phạt thích đáng."'},
+  {id:4,en:'juvenile delinquency',ipa:'/ˈdʒuːvənaɪl dɪˈlɪŋkwənsi/',pos:'n',vi:'Tệ nạn trẻ vị thành niên',enDef:'Criminal behavior committed by young people under the age of 18',collocations:['rise in juvenile delinquency','juvenile delinquency rates','address juvenile delinquency','prevent juvenile delinquency'],collocationVi:['gia tăng tệ nạn trẻ vị thành niên','tỷ lệ tệ nạn trẻ vị thành niên','giải quyết tệ nạn trẻ vị thành niên','ngăn chặn tệ nạn trẻ vị thành niên'],synonyms:['youth crime','adolescent offending','underage criminal behavior'],synonymsVi:['tội phạm trẻ em','vi phạm pháp luật của thanh thiếu niên','hành vi phạm tội của người chưa thành niên'],antonyms:['law-abiding youth','responsible adolescent behavior'],antonymsVi:['thanh niên tuân thủ pháp luật','hành vi có trách nhiệm của thanh thiếu niên'],wordFamily:['juvenile (adj/n)','delinquent (n/adj)','delinquency (n)'],wordFamilyVi:['vị thành niên (tính từ/danh từ)','người phạm tội trẻ (danh từ/tính từ)','tệ nạn (danh từ)'],example:'"Juvenile delinquency is increasing in urban areas, demanding urgent action."',exampleVi:'"Tệ nạn trẻ vị thành niên đang gia tăng ở các khu vực thành thị, đòi hỏi hành động khẩn cấp."'},
+  {id:5,en:'punish',ipa:'/ˈpʌnɪʃ/',pos:'v',vi:'Trừng phạt',enDef:'To make someone suffer because they have done something wrong or illegal',collocations:['punish wrongdoers','punish harshly','punish fairly','punish offenders'],collocationVi:['trừng phạt kẻ vi phạm','trừng phạt nghiêm khắc','trừng phạt công bằng','trừng phạt tội phạm'],synonyms:['penalize','sanction','discipline','sentence'],synonymsVi:['xử phạt','xử lý','kỷ luật','kết án'],antonyms:['reward','pardon','excuse','forgive'],antonymsVi:['khen thưởng','tha thứ','bỏ qua','tha lỗi'],wordFamily:['punishment (n)','punishable (adj)','punitive (adj)'],wordFamilyVi:['hình phạt (danh từ)','đáng bị phạt (tính từ)','mang tính trừng phạt (tính từ)'],example:'"Children should not be punished harshly for minor mistakes."',exampleVi:'"Trẻ em không nên bị trừng phạt nghiêm khắc vì những lỗi nhỏ."'},
+  {id:6,en:'penalize',ipa:'/ˈpiːnəlaɪz/',pos:'v',vi:'Xử phạt',enDef:'To officially punish someone for breaking a rule or law',collocations:['penalize offenders','penalize rule-breakers','be penalized for','penalize companies'],collocationVi:['xử phạt tội phạm','xử phạt người vi phạm quy tắc','bị xử phạt vì','xử phạt công ty'],synonyms:['fine','punish','sanction','discipline'],synonymsVi:['phạt tiền','trừng phạt','xử lý chính thức','kỷ luật'],antonyms:['reward','exempt','excuse'],antonymsVi:['khen thưởng','miễn trừ','bỏ qua'],wordFamily:['penalty (n)','penal (adj)','penalization (n)'],wordFamilyVi:['hình phạt (danh từ)','liên quan đến hình phạt (tính từ)','sự xử phạt (danh từ)'],example:'"The law penalizes those who break traffic regulations."',exampleVi:'"Pháp luật xử phạt những người vi phạm quy định giao thông."'},
+  {id:7,en:'sanction',ipa:'/ˈsæŋkʃən/',pos:'v/n',vi:'Xử phạt chính thức / Lệnh trừng phạt',enDef:'An official penalty for breaking a law or rule; to officially allow or approve of something',collocations:['impose sanctions','face sanctions','economic sanctions','official sanction'],collocationVi:['áp đặt lệnh trừng phạt','đối mặt với lệnh trừng phạt','lệnh trừng phạt kinh tế','xử phạt chính thức'],synonyms:['penalty','punishment','authorization','approval'],synonymsVi:['hình phạt','trừng phạt','ủy quyền','chấp thuận'],antonyms:['reward','prohibition','disapproval'],antonymsVi:['khen thưởng','lệnh cấm','không chấp thuận'],wordFamily:['sanction (n/v)','sanctioned (adj)'],wordFamilyVi:['lệnh trừng phạt (danh từ/động từ)','được phê duyệt (tính từ)'],example:'"Parents should be sanctioned for neglecting their children\'s behavior."',exampleVi:'"Cha mẹ nên bị xử phạt chính thức vì bỏ bê hành vi của con cái."'},
+  {id:8,en:'hold sb accountable for',ipa:'/həʊld ˌsʌmbədi əˈkaʊntəbl fɔː/',pos:'v',vi:'Buộc ai chịu trách nhiệm',enDef:'To require someone to explain and accept responsibility for their actions',collocations:['hold parents accountable','hold government accountable','be held accountable for','hold someone criminally accountable'],collocationVi:['buộc cha mẹ chịu trách nhiệm','buộc chính phủ chịu trách nhiệm','bị buộc chịu trách nhiệm','buộc ai chịu trách nhiệm hình sự'],synonyms:['make someone responsible','call to account','hold liable'],synonymsVi:['buộc ai phải chịu trách nhiệm','yêu cầu giải thích','buộc phải chịu trách nhiệm pháp lý'],antonyms:['excuse','absolve','exonerate'],antonymsVi:['bỏ qua','tha tội','miễn truy tố'],wordFamily:['accountable (adj)','accountability (n)','account (v/n)'],wordFamilyVi:['có trách nhiệm (tính từ)','trách nhiệm giải trình (danh từ)','giải thích (động từ/danh từ)'],example:'"Parents must be held accountable for their children\'s criminal actions."',exampleVi:'"Cha mẹ phải bị buộc chịu trách nhiệm về các hành động phạm tội của con cái họ."'},
+  {id:9,en:'bear responsibility',ipa:'/beər rɪˌspɒnsəˈbɪlɪti/',pos:'v',vi:'Chịu trách nhiệm',enDef:'To accept or carry the duty or obligation for something',collocations:['bear full responsibility','bear moral responsibility','bear responsibility for upbringing','bear the consequences'],collocationVi:['chịu hoàn toàn trách nhiệm','chịu trách nhiệm đạo đức','chịu trách nhiệm nuôi dưỡng','gánh hậu quả'],synonyms:['take responsibility','assume responsibility','be responsible for'],synonymsVi:['nhận trách nhiệm','đảm nhận trách nhiệm','chịu trách nhiệm về'],antonyms:['evade responsibility','shift responsibility','escape blame'],antonymsVi:['trốn tránh trách nhiệm','chuyển trách nhiệm','thoát khỏi tội lỗi'],wordFamily:['responsibility (n)','responsible (adj)','responsibly (adv)'],wordFamilyVi:['trách nhiệm (danh từ)','có trách nhiệm (tính từ)','một cách có trách nhiệm (trạng từ)'],example:'"Parents bear responsibility for instilling good values in their children."',exampleVi:'"Cha mẹ chịu trách nhiệm truyền đạt các giá trị tốt đẹp cho con cái."'},
+  {id:10,en:'upbringing',ipa:'/ˈʌpbrɪŋɪŋ/',pos:'n',vi:'Sự nuôi dạy',enDef:'The way a child is raised and educated during their childhood',collocations:['good upbringing','strict upbringing','upbringing shapes character','proper upbringing'],collocationVi:['sự nuôi dạy tốt','nuôi dạy nghiêm khắc','sự nuôi dạy hình thành tính cách','nuôi dạy đúng đắn'],synonyms:['rearing','childhood education','parenting','nurturing'],synonymsVi:['việc nuôi dưỡng','giáo dục thời thơ ấu','việc làm cha mẹ','việc chăm sóc'],antonyms:['neglect','abandonment'],antonymsVi:['bỏ bê','bỏ rơi'],wordFamily:['bring up (v)','upbringing (n)'],wordFamilyVi:['nuôi dưỡng (động từ)','sự nuôi dạy (danh từ)'],example:'"A good upbringing shapes a child\'s character and moral values."',exampleVi:'"Sự nuôi dạy tốt hình thành tính cách và giá trị đạo đức của một đứa trẻ."'},
+  {id:11,en:'instill moral values',ipa:'/ɪnˈstɪl ˈmɒrəl ˈvæljuːz/',pos:'v',vi:'Truyền giá trị đạo đức',enDef:'To gradually and firmly establish values and principles in someone\'s mind',collocations:['instill moral values in children','instill a sense of responsibility','instill discipline','instill good habits'],collocationVi:['truyền giá trị đạo đức cho trẻ em','rèn ý thức trách nhiệm','rèn kỷ luật','rèn thói quen tốt'],synonyms:['impart values','teach principles','inculcate morals'],synonymsVi:['truyền đạt giá trị','dạy nguyên tắc','khắc sâu đạo đức'],antonyms:['corrupt values','undermine morals'],antonymsVi:['làm hỏng giá trị','làm suy yếu đạo đức'],wordFamily:['instill (v)','moral (adj/n)','morality (n)'],wordFamilyVi:['rèn giũa (động từ)','đạo đức (tính từ/danh từ)','đạo đức học (danh từ)'],example:'"Schools and families must work together to instill moral values in young people."',exampleVi:'"Trường học và gia đình phải phối hợp để truyền giá trị đạo đức cho giới trẻ."'},
+  {id:12,en:'deterrent',ipa:'/dɪˈterənt/',pos:'n',vi:'Yếu tố răn đe',enDef:'Something that discourages people from doing something by making them afraid of the consequences',collocations:['act as a deterrent','effective deterrent','serve as a deterrent','strong deterrent'],collocationVi:['có tác dụng răn đe','yếu tố răn đe hiệu quả','phục vụ như yếu tố răn đe','yếu tố răn đe mạnh'],synonyms:['disincentive','preventive measure','discouragement'],synonymsVi:['yếu tố ngăn cản','biện pháp phòng ngừa','sự nản lòng'],antonyms:['incentive','encouragement','motivation'],antonymsVi:['khuyến khích','động lực','thúc đẩy'],wordFamily:['deter (v)','deterrence (n)','deterrent (adj/n)'],wordFamilyVi:['răn đe (động từ)','sự răn đe (danh từ)','có tác dụng răn đe (tính từ/danh từ)'],example:'"Strict laws and heavy fines act as a deterrent to potential criminals."',exampleVi:'"Luật nghiêm khắc và phạt tiền nặng có tác dụng răn đe những tội phạm tiềm năng."'},
+  {id:13,en:'rehabilitation',ipa:'/ˌriːəˌbɪlɪˈteɪʃən/',pos:'n',vi:'Cải tạo',enDef:'The process of helping someone to return to a good, healthy, or normal life after being in prison or having a health problem',collocations:['rehabilitation program','criminal rehabilitation','rehabilitation center','focus on rehabilitation'],collocationVi:['chương trình cải tạo','cải tạo tội phạm','trung tâm cải tạo','tập trung vào cải tạo'],synonyms:['reform','recovery','reintegration','restoration'],synonymsVi:['cải cách','phục hồi','tái hòa nhập','phục hồi'],antonyms:['punishment','incarceration','isolation'],antonymsVi:['trừng phạt','giam cầm','cô lập'],wordFamily:['rehabilitate (v)','rehabilitative (adj)'],wordFamilyVi:['cải tạo (động từ)','mang tính cải tạo (tính từ)'],example:'"Rehabilitation is often more effective than punishment in reducing reoffending."',exampleVi:'"Cải tạo thường hiệu quả hơn trừng phạt trong việc giảm tái phạm."'},
+  {id:14,en:'reform',ipa:'/rɪˈfɔːm/',pos:'v/n',vi:'Cải thiện / Cải tạo',enDef:'To change a system, organization, or person to improve them; the process of changing for the better',collocations:['reform the prison system','criminal justice reform','reform policy','focus on reform rather than punishment'],collocationVi:['cải cách hệ thống nhà tù','cải cách tư pháp hình sự','cải cách chính sách','tập trung cải tạo thay vì trừng phạt'],synonyms:['improve','rehabilitate','transform','change'],synonymsVi:['cải thiện','phục hồi','biến đổi','thay đổi'],antonyms:['worsen','corrupt','deteriorate'],antonymsVi:['làm xấu đi','làm hư hỏng','suy thoái'],wordFamily:['reform (n/v)','reformer (n)','reformation (n)','reformist (adj)'],wordFamilyVi:['cải cách (danh từ/động từ)','nhà cải cách (danh từ)','cuộc cải tổ (danh từ)','có tính cải cách (tính từ)'],example:'"The criminal justice system should focus on reform rather than punishment alone."',exampleVi:'"Hệ thống tư pháp hình sự nên tập trung vào cải tạo hơn là chỉ trừng phạt."'},
+  {id:15,en:'psychological impact',ipa:'/ˌsaɪkəˈlɒdʒɪkl ˈɪmpækt/',pos:'n',vi:'Tác động tâm lý',enDef:'The effect that something has on a person\'s mind and emotions',collocations:['negative psychological impact','long-term psychological impact','psychological impact on children','severe psychological impact'],collocationVi:['tác động tâm lý tiêu cực','tác động tâm lý lâu dài','tác động tâm lý lên trẻ em','tác động tâm lý nghiêm trọng'],synonyms:['mental effect','emotional consequence','psychological consequence'],synonymsVi:['tác động tinh thần','hậu quả cảm xúc','hậu quả tâm lý'],antonyms:['positive psychological effect','mental benefit'],antonymsVi:['tác động tâm lý tích cực','lợi ích tinh thần'],wordFamily:['psychology (n)','psychological (adj)','psychologically (adv)'],wordFamilyVi:['tâm lý học (danh từ)','mang tính tâm lý (tính từ)','về mặt tâm lý (trạng từ)'],example:'"Harsh punishment can have a severe psychological impact on young offenders."',exampleVi:'"Hình phạt nghiêm khắc có thể có tác động tâm lý nặng nề lên tội phạm trẻ."'},
+  {id:16,en:'resentment',ipa:'/rɪˈzentmənt/',pos:'n',vi:'Sự oán giận',enDef:'A feeling of anger or bitterness towards someone because you feel unfairly treated',collocations:['build resentment','feel resentment','deep resentment','resentment towards authority'],collocationVi:['tích tụ oán giận','cảm thấy oán giận','oán giận sâu sắc','oán giận đối với chính quyền'],synonyms:['bitterness','anger','grudge','animosity'],synonymsVi:['cay đắng','tức giận','thù hận','thù ghét'],antonyms:['gratitude','forgiveness','acceptance','goodwill'],antonymsVi:['lòng biết ơn','sự tha thứ','sự chấp nhận','thiện ý'],wordFamily:['resent (v)','resentful (adj)','resentfully (adv)'],wordFamilyVi:['oán giận (động từ)','đầy oán giận (tính từ)','một cách oán giận (trạng từ)'],example:'"Harsh and unfair punishment often creates resentment in young offenders."',exampleVi:'"Hình phạt khắc nghiệt và bất công thường tạo ra sự oán giận ở tội phạm trẻ."'},
+  {id:17,en:'antisocial behavior',ipa:'/ˌæntiˈsəʊʃl bɪˈheɪvjər/',pos:'n',vi:'Hành vi chống đối xã hội',enDef:'Behavior that is harmful or disruptive to society or to other people',collocations:['exhibit antisocial behavior','antisocial behavior disorder','prevent antisocial behavior','lead to antisocial behavior'],collocationVi:['biểu hiện hành vi chống đối xã hội','rối loạn hành vi chống đối xã hội','ngăn chặn hành vi chống đối xã hội','dẫn đến hành vi chống đối xã hội'],synonyms:['disruptive behavior','deviant behavior','harmful conduct'],synonymsVi:['hành vi gây rối','hành vi lệch lạc','hành vi có hại'],antonyms:['prosocial behavior','cooperative behavior','law-abiding conduct'],antonymsVi:['hành vi có ích cho xã hội','hành vi hợp tác','hành vi tuân thủ pháp luật'],wordFamily:['antisocial (adj)','behave (v)','behavior (n)'],wordFamilyVi:['chống đối xã hội (tính từ)','cư xử (động từ)','hành vi (danh từ)'],example:'"Lack of parental supervision may lead to antisocial behavior in teenagers."',exampleVi:'"Thiếu sự giám sát của cha mẹ có thể dẫn đến hành vi chống đối xã hội ở thanh thiếu niên."'},
+  {id:18,en:'criminal record',ipa:'/ˈkrɪmɪnl ˈrekəd/',pos:'n',vi:'Tiền án',enDef:'An official list of the crimes someone has been found guilty of',collocations:['have a criminal record','criminal record check','clear criminal record','criminal record affects opportunities'],collocationVi:['có tiền án','kiểm tra tiền án','tiền án sạch','tiền án ảnh hưởng đến cơ hội'],synonyms:['criminal history','prior convictions','past offenses'],synonymsVi:['lịch sử tội phạm','tiền án trước đây','tội phạm trước đây'],antonyms:['clean record','no prior convictions'],antonymsVi:['lý lịch sạch','không có tiền án'],wordFamily:['criminal (adj/n)','record (n/v)'],wordFamilyVi:['tội phạm (tính từ/danh từ)','hồ sơ (danh từ/động từ)'],example:'"A criminal record can seriously affect future employment opportunities."',exampleVi:'"Tiền án có thể ảnh hưởng nghiêm trọng đến cơ hội việc làm trong tương lai."'},
+  {id:19,en:'stigma',ipa:'/ˈstɪɡmə/',pos:'n',vi:'Sự kỳ thị',enDef:'A strong feeling of disapproval that most people in a society have about something, making those affected feel ashamed',collocations:['social stigma','suffer stigma','attach a stigma','stigma of having a criminal record'],collocationVi:['kỳ thị xã hội','chịu sự kỳ thị','gắn nhãn kỳ thị','kỳ thị vì có tiền án'],synonyms:['shame','disgrace','social disapproval','dishonor'],synonymsVi:['xấu hổ','ô nhục','sự không tán thành của xã hội','mất danh dự'],antonyms:['acceptance','respect','social approval'],antonymsVi:['sự chấp nhận','sự tôn trọng','sự tán thành xã hội'],wordFamily:['stigma (n)','stigmatize (v)','stigmatic (adj)'],wordFamilyVi:['kỳ thị (danh từ)','kỳ thị (động từ)','mang kỳ thị (tính từ)'],example:'"Children who commit crimes may suffer social stigma for years afterward."',exampleVi:'"Trẻ em phạm tội có thể phải chịu sự kỳ thị xã hội trong nhiều năm sau đó."'},
+  {id:20,en:'reoffend',ipa:'/ˌriːəˈfend/',pos:'v',vi:'Tái phạm',enDef:'To commit a crime again after being punished for a previous crime',collocations:['likely to reoffend','reoffending rates','reduce reoffending','risk of reoffending'],collocationVi:['có khả năng tái phạm','tỷ lệ tái phạm','giảm tái phạm','nguy cơ tái phạm'],synonyms:['commit another crime','relapse into crime','recidivate'],synonymsVi:['phạm tội lại','tái phạm tội','tái phạm'],antonyms:['rehabilitate','reform','go straight'],antonymsVi:['cải tạo','cải tổ','đi đúng đường'],wordFamily:['offend (v)','offender (n)','reoffending (n)','offense (n)'],wordFamilyVi:['vi phạm (động từ)','người vi phạm (danh từ)','tái phạm (danh từ)','tội phạm (danh từ)'],example:'"Without proper rehabilitation, offenders are likely to reoffend after release."',exampleVi:'"Nếu không được cải tạo đúng cách, tội phạm có khả năng tái phạm sau khi được thả."'},
+  {id:21,en:'preventive measure',ipa:'/prɪˈventɪv ˈmeʒər/',pos:'n',vi:'Biện pháp phòng ngừa',enDef:'An action taken to stop something bad from happening before it occurs',collocations:['take preventive measures','adopt preventive measures','preventive measure against crime','effective preventive measure'],collocationVi:['thực hiện biện pháp phòng ngừa','áp dụng biện pháp phòng ngừa','biện pháp phòng ngừa tội phạm','biện pháp phòng ngừa hiệu quả'],synonyms:['precautionary measure','proactive measure','safeguard'],synonymsVi:['biện pháp đề phòng','biện pháp chủ động','biện pháp bảo vệ'],antonyms:['reactive measure','punishment after the fact'],antonymsVi:['biện pháp phản ứng','trừng phạt sau khi xảy ra'],wordFamily:['prevent (v)','prevention (n)','preventive (adj)'],wordFamilyVi:['ngăn chặn (động từ)','phòng ngừa (danh từ)','mang tính phòng ngừa (tính từ)'],example:'"Education is considered one of the most effective preventive measures against crime."',exampleVi:'"Giáo dục được coi là một trong những biện pháp phòng ngừa tội phạm hiệu quả nhất."'},
+  {id:22,en:'supervision',ipa:'/ˌsuːpəˈvɪʒən/',pos:'n',vi:'Sự giám sát',enDef:'The act of watching over and directing someone to make sure they do things properly',collocations:['parental supervision','lack of supervision','under close supervision','need supervision'],collocationVi:['sự giám sát của cha mẹ','thiếu giám sát','dưới sự giám sát chặt chẽ','cần giám sát'],synonyms:['oversight','monitoring','surveillance','control'],synonymsVi:['giám sát','theo dõi','kiểm soát','kiểm tra'],antonyms:['neglect','abandonment','lack of oversight'],antonymsVi:['bỏ bê','bỏ rơi','thiếu giám sát'],wordFamily:['supervise (v)','supervisor (n)','supervisory (adj)'],wordFamilyVi:['giám sát (động từ)','người giám sát (danh từ)','mang tính giám sát (tính từ)'],example:'"Lack of parental supervision is a key factor in juvenile delinquency."',exampleVi:'"Thiếu sự giám sát của cha mẹ là yếu tố chính dẫn đến tệ nạn trẻ vị thành niên."'},
+  {id:23,en:'parental neglect',ipa:'/pəˈrentl nɪˈɡlekt/',pos:'n',vi:'Sự bỏ bê của cha mẹ',enDef:'The failure of parents to adequately care for or attend to their children\'s needs',collocations:['suffer from parental neglect','parental neglect leads to crime','cases of parental neglect','consequence of parental neglect'],collocationVi:['chịu đựng sự bỏ bê của cha mẹ','bỏ bê cha mẹ dẫn đến tội phạm','các trường hợp bỏ bê cha mẹ','hậu quả của bỏ bê cha mẹ'],synonyms:['child neglect','parental negligence','failure of parental duty'],synonymsVi:['bỏ bê trẻ em','sự lơ là của cha mẹ','thất bại trong nghĩa vụ làm cha mẹ'],antonyms:['parental care','attentive parenting','parental involvement'],antonymsVi:['sự quan tâm của cha mẹ','nuôi dạy chu đáo','sự tham gia của cha mẹ'],wordFamily:['neglect (v/n)','negligent (adj)','negligence (n)'],wordFamilyVi:['bỏ bê (động từ/danh từ)','thiếu trách nhiệm (tính từ)','sự thiếu trách nhiệm (danh từ)'],example:'"Parental neglect is identified as a key cause of youth crime."',exampleVi:'"Sự bỏ bê của cha mẹ được xác định là nguyên nhân chính của tội phạm trẻ em."'},
+  {id:24,en:'take responsibility',ipa:'/teɪk rɪˌspɒnsəˈbɪlɪti/',pos:'v',vi:'Chịu trách nhiệm',enDef:'To accept that you are responsible for something, especially something that has gone wrong',collocations:['take full responsibility','take responsibility for actions','refuse to take responsibility','take responsibility for children'],collocationVi:['chịu hoàn toàn trách nhiệm','chịu trách nhiệm về hành động','từ chối chịu trách nhiệm','chịu trách nhiệm về con cái'],synonyms:['assume responsibility','own up','be accountable','accept blame'],synonymsVi:['đảm nhận trách nhiệm','thừa nhận','chịu trách nhiệm','nhận lỗi'],antonyms:['evade responsibility','blame others','shift responsibility'],antonymsVi:['trốn tránh trách nhiệm','đổ lỗi cho người khác','chuyển trách nhiệm'],wordFamily:['responsibility (n)','responsible (adj)','responsibly (adv)'],wordFamilyVi:['trách nhiệm (danh từ)','có trách nhiệm (tính từ)','một cách có trách nhiệm (trạng từ)'],example:'"Young offenders must be taught to take responsibility for their actions."',exampleVi:'"Tội phạm trẻ phải được dạy cách chịu trách nhiệm về hành động của mình."'},
+  {id:25,en:'convict a criminal',ipa:'/kənˈvɪkt ə ˈkrɪmɪnl/',pos:'v',vi:'Kết tội một tội phạm',enDef:'To officially declare someone guilty of a crime in a court of law',collocations:['convict a criminal in court','convicted of murder','wrongly convicted','convicted felon'],collocationVi:['kết tội tội phạm trước tòa','bị kết tội giết người','bị kết tội oan','tên tội phạm bị kết tội'],synonyms:['find guilty','sentence','prosecute successfully'],synonymsVi:['tuyên bố có tội','kết án','truy tố thành công'],antonyms:['acquit','clear','exonerate'],antonymsVi:['tha bổng','miễn tội','miễn truy tố'],wordFamily:['conviction (n)','convicted (adj)','convict (n)'],wordFamilyVi:['kết án (danh từ)','bị kết tội (tính từ)','tù nhân (danh từ)'],example:'"The court convicted the criminal and sentenced him to ten years in prison."',exampleVi:'"Tòa án kết tội tội phạm và kết án anh ta mười năm tù."'},
+  {id:26,en:'enforce the law',ipa:'/ɪnˈfɔːs ðə lɔː/',pos:'v',vi:'Thực thi pháp luật',enDef:'To make sure that people obey the law by using official power',collocations:['enforce the law strictly','enforce the law effectively','fail to enforce the law','police enforce the law'],collocationVi:['thực thi pháp luật nghiêm khắc','thực thi pháp luật hiệu quả','không thực thi pháp luật','cảnh sát thực thi pháp luật'],synonyms:['uphold the law','implement the law','carry out the law'],synonymsVi:['bảo vệ pháp luật','thực hiện pháp luật','thi hành pháp luật'],antonyms:['ignore the law','overlook violations','turn a blind eye'],antonymsVi:['bỏ qua pháp luật','bỏ qua vi phạm','giả vờ không thấy'],wordFamily:['enforce (v)','enforcement (n)','law enforcement (n)'],wordFamilyVi:['thực thi (động từ)','sự thực thi (danh từ)','thực thi pháp luật (danh từ)'],example:'"The government must enforce the law strictly to maintain social order."',exampleVi:'"Chính phủ phải thực thi pháp luật nghiêm khắc để duy trì trật tự xã hội."'},
+  {id:27,en:'capital punishment',ipa:'/ˈkæpɪtl ˈpʌnɪʃmənt/',pos:'n',vi:'Án tử hình',enDef:'The legal execution of a person as punishment for a serious crime',collocations:['abolish capital punishment','support capital punishment','capital punishment debate','impose capital punishment'],collocationVi:['bãi bỏ án tử hình','ủng hộ án tử hình','tranh luận về án tử hình','áp đặt án tử hình'],synonyms:['death penalty','execution','death sentence'],synonymsVi:['án tử hình','hành quyết','bản án tử hình'],antonyms:['life imprisonment','leniency','pardon'],antonymsVi:['tù chung thân','khoan nhượng','ân xá'],wordFamily:['punish (v)','punishment (n)','punitive (adj)'],wordFamilyVi:['trừng phạt (động từ)','hình phạt (danh từ)','mang tính trừng phạt (tính từ)'],example:'"Some countries have abolished capital punishment as it violates human rights."',exampleVi:'"Một số quốc gia đã bãi bỏ án tử hình vì nó vi phạm quyền con người."'},
+  {id:28,en:'forensic evidence',ipa:'/fəˈrensɪk ˈevɪdəns/',pos:'n',vi:'Bằng chứng pháp y',enDef:'Scientific evidence used in criminal investigations and legal proceedings',collocations:['collect forensic evidence','forensic evidence in court','DNA as forensic evidence','forensic evidence is crucial'],collocationVi:['thu thập bằng chứng pháp y','bằng chứng pháp y trước tòa','ADN là bằng chứng pháp y','bằng chứng pháp y rất quan trọng'],synonyms:['scientific proof','crime scene evidence','physical evidence'],synonymsVi:['bằng chứng khoa học','bằng chứng hiện trường','bằng chứng vật chất'],antonyms:['circumstantial evidence','hearsay','speculation'],antonymsVi:['bằng chứng hoàn cảnh','tin đồn','suy đoán'],wordFamily:['forensics (n)','forensic (adj)','forensically (adv)'],wordFamilyVi:['khoa học pháp y (danh từ)','mang tính pháp y (tính từ)','về mặt pháp y (trạng từ)'],example:'"DNA as forensic evidence played a key role in convicting the suspect."',exampleVi:'"ADN là bằng chứng pháp y đóng vai trò then chốt trong việc kết tội nghi phạm."'},
+  {id:29,en:'law-abiding citizens',ipa:'/ˈlɔː əˌbaɪdɪŋ ˈsɪtɪzənz/',pos:'n',vi:'Công dân tuân thủ pháp luật',enDef:'People who obey and respect the laws of their country',collocations:['protect law-abiding citizens','law-abiding citizens deserve safety','majority are law-abiding','reward law-abiding behavior'],collocationVi:['bảo vệ công dân tuân thủ pháp luật','công dân tuân thủ pháp luật xứng đáng được an toàn','đa số tuân thủ pháp luật','khen thưởng hành vi tuân thủ pháp luật'],synonyms:['obedient citizens','rule-following individuals','responsible members of society'],synonymsVi:['công dân ngoan ngoãn','người tuân thủ quy tắc','thành viên có trách nhiệm của xã hội'],antonyms:['offenders','criminals','lawbreakers'],antonymsVi:['tội phạm','kẻ phạm tội','người vi phạm pháp luật'],wordFamily:['abide (v)','law (n)','citizen (n)'],wordFamilyVi:['tuân thủ (động từ)','pháp luật (danh từ)','công dân (danh từ)'],example:'"Law-abiding citizens deserve protection from those who break the rules."',exampleVi:'"Công dân tuân thủ pháp luật xứng đáng được bảo vệ khỏi những người vi phạm quy tắc."'},
+  {id:30,en:'arrest suspects',ipa:'/əˈrest ˈsʌspekts/',pos:'v',vi:'Bắt giữ nghi phạm',enDef:'To take someone into legal custody because they are believed to have committed a crime',collocations:['arrest suspects quickly','arrest suspects on charges','police arrested suspects','arrest suspects without evidence'],collocationVi:['bắt giữ nghi phạm nhanh chóng','bắt giữ nghi phạm vì tội danh','cảnh sát bắt giữ nghi phạm','bắt giữ nghi phạm không có bằng chứng'],synonyms:['detain','apprehend','take into custody','bring in'],synonymsVi:['tạm giam','bắt giữ','bắt vào tạm giam','đưa vào đồn'],antonyms:['release','free','let go'],antonymsVi:['thả','tự do','thả ra'],wordFamily:['arrest (n)','suspect (n/v)','suspicion (n)'],wordFamilyVi:['vụ bắt giữ (danh từ)','nghi phạm (danh từ/động từ)','sự nghi ngờ (danh từ)'],example:'"Police arrested several suspects during the investigation of the robbery."',exampleVi:'"Cảnh sát đã bắt giữ nhiều nghi phạm trong quá trình điều tra vụ cướp."'},
+  {id:31,en:'serve a prison sentence',ipa:'/sɜːv ə ˈprɪzən ˈsentəns/',pos:'v',vi:'Thụ án tù',enDef:'To spend time in prison as punishment after being found guilty of a crime',collocations:['serve a long sentence','serve a minimum sentence','serve time in prison','sentence served'],collocationVi:['thụ án dài','thụ án tối thiểu','thụ án trong tù','đã hoàn thành án'],synonyms:['do time','be incarcerated','be imprisoned'],synonymsVi:['ngồi tù','bị giam cầm','bị bỏ tù'],antonyms:['be released','be acquitted','be pardoned'],antonymsVi:['được thả ra','được tha bổng','được ân xá'],wordFamily:['sentence (n/v)','imprison (v)','imprisonment (n)'],wordFamilyVi:['bản án (danh từ/động từ)','bỏ tù (động từ)','sự giam cầm (danh từ)'],example:'"He served a ten-year prison sentence for his involvement in the robbery."',exampleVi:'"Anh ta đã thụ án mười năm tù vì tham gia vào vụ cướp."'},
+  {id:32,en:'reintegrate into society',ipa:'/ˌriːˈɪntɪɡreɪt ˈɪntə səˈsaɪəti/',pos:'v',vi:'Tái hòa nhập xã hội',enDef:'To return to normal life in society after being in prison or away for a long time',collocations:['help offenders reintegrate','successfully reintegrate into society','struggle to reintegrate','reintegration programs'],collocationVi:['giúp tội phạm tái hòa nhập','tái hòa nhập xã hội thành công','vật lộn để tái hòa nhập','chương trình tái hòa nhập'],synonyms:['rejoin society','re-assimilate','return to the community'],synonymsVi:['gia nhập lại xã hội','hòa nhập lại','trở về cộng đồng'],antonyms:['remain isolated','be excluded','stay marginalized'],antonymsVi:['tiếp tục bị cô lập','bị loại trừ','vẫn bị lề hóa'],wordFamily:['reintegration (n)','integrate (v)','integration (n)'],wordFamilyVi:['sự tái hòa nhập (danh từ)','hòa nhập (động từ)','sự hòa nhập (danh từ)'],example:'"Programs should help ex-offenders reintegrate into society after prison."',exampleVi:'"Các chương trình nên giúp cựu tội phạm tái hòa nhập xã hội sau khi ra tù."'},
+  {id:33,en:'act as a deterrent',ipa:'/ækt æz ə dɪˈterənt/',pos:'v',vi:'Có tác dụng răn đe',enDef:'To serve as something that prevents people from doing wrong because of the fear of consequences',collocations:['act as a deterrent to crime','act as a powerful deterrent','prison acts as a deterrent','fines act as a deterrent'],collocationVi:['có tác dụng răn đe tội phạm','có tác dụng răn đe mạnh mẽ','tù giam có tác dụng răn đe','phạt tiền có tác dụng răn đe'],synonyms:['serve as a warning','discourage crime','prevent offending'],synonymsVi:['phục vụ như cảnh báo','ngăn chặn tội phạm','ngăn cản phạm tội'],antonyms:['encourage crime','incentivize wrongdoing'],antonymsVi:['khuyến khích tội phạm','tạo động lực cho hành vi sai trái'],wordFamily:['deter (v)','deterrence (n)','deterrent (n/adj)'],wordFamilyVi:['răn đe (động từ)','sự răn đe (danh từ)','yếu tố răn đe (danh từ/tính từ)'],example:'"Heavy fines for drunk driving act as a deterrent to other road users."',exampleVi:'"Phạt tiền nặng cho tội say rượu lái xe có tác dụng răn đe các người tham gia giao thông khác."'},
+  {id:34,en:'non-custodial sentence',ipa:'/ˌnɒn kʌˈstəʊdiəl ˈsentəns/',pos:'n',vi:'Án không giam giữ',enDef:'A punishment for crime that does not involve imprisonment, such as community service or a fine',collocations:['impose a non-custodial sentence','non-custodial sentence for minor crimes','prefer non-custodial sentences','non-custodial punishment'],collocationVi:['áp đặt án không giam giữ','án không giam giữ cho tội nhẹ','ưu tiên án không giam giữ','hình phạt không giam giữ'],synonyms:['alternative sentence','community sentence','suspended sentence'],synonymsVi:['án thay thế','án phục vụ cộng đồng','án treo'],antonyms:['custodial sentence','imprisonment','incarceration'],antonymsVi:['án tù giam','bỏ tù','giam cầm'],wordFamily:['custodial (adj)','custody (n)','sentence (n/v)'],wordFamilyVi:['liên quan đến giam giữ (tính từ)','sự giam giữ (danh từ)','bản án (danh từ/động từ)'],example:'"Community service is a common type of non-custodial sentence for first-time offenders."',exampleVi:'"Phục vụ cộng đồng là loại án không giam giữ phổ biến cho người phạm tội lần đầu."'},
+  {id:35,en:'public safety',ipa:'/ˈpʌblɪk ˈseɪfti/',pos:'n',vi:'An toàn công cộng',enDef:'The protection of the general public from crime, danger, and threats to their wellbeing',collocations:['protect public safety','ensure public safety','threat to public safety','public safety measures'],collocationVi:['bảo vệ an toàn công cộng','đảm bảo an toàn công cộng','mối đe dọa đến an toàn công cộng','các biện pháp an toàn công cộng'],synonyms:['community safety','societal security','social protection'],synonymsVi:['an toàn cộng đồng','bảo mật xã hội','bảo vệ xã hội'],antonyms:['public danger','social threat','community risk'],antonymsVi:['nguy hiểm công cộng','mối đe dọa xã hội','rủi ro cộng đồng'],wordFamily:['safe (adj)','safely (adv)','safety (n)'],wordFamilyVi:['an toàn (tính từ)','một cách an toàn (trạng từ)','sự an toàn (danh từ)'],example:'"Laws are designed to protect public safety by punishing those who threaten it."',exampleVi:'"Pháp luật được thiết kế để bảo vệ an toàn công cộng bằng cách trừng phạt những người đe dọa nó."'},
+  {id:36,en:'impose a penalty',ipa:'/ɪmˈpəʊz ə ˈpenəlti/',pos:'v',vi:'Áp đặt hình phạt',enDef:'To officially require someone to pay a fine or suffer a punishment for doing something wrong',collocations:['impose a heavy penalty','impose a financial penalty','impose a penalty on businesses','the court imposed a penalty'],collocationVi:['áp đặt hình phạt nặng','áp đặt hình phạt tài chính','áp đặt hình phạt cho doanh nghiệp','tòa án áp đặt hình phạt'],synonyms:['enforce a fine','administer punishment','levy a penalty'],synonymsVi:['thực thi phạt tiền','thi hành hình phạt','áp thuế phạt'],antonyms:['waive a penalty','exempt from punishment','pardon'],antonymsVi:['miễn hình phạt','miễn trừ khỏi hình phạt','ân xá'],wordFamily:['impose (v)','imposition (n)','penalty (n)'],wordFamilyVi:['áp đặt (động từ)','sự áp đặt (danh từ)','hình phạt (danh từ)'],example:'"The court imposed a heavy penalty on the company for breaking environmental regulations."',exampleVi:'"Tòa án đã áp đặt hình phạt nặng lên công ty vì vi phạm quy định môi trường."'},
+  {id:37,en:'peer pressure',ipa:'/pɪr ˈpreʃər/',pos:'n',vi:'Áp lực bạn bè',enDef:'The strong influence that people of the same age group have on each other to behave in certain ways',collocations:['succumb to peer pressure','resist peer pressure','peer pressure leads to crime','negative peer pressure'],collocationVi:['chịu khuất phục trước áp lực bạn bè','chống lại áp lực bạn bè','áp lực bạn bè dẫn đến tội phạm','áp lực bạn bè tiêu cực'],synonyms:['social influence','group pressure','conformity pressure'],synonymsVi:['ảnh hưởng xã hội','áp lực nhóm','áp lực tuân thủ'],antonyms:['independent thinking','self-determination','individual choice'],antonymsVi:['tư duy độc lập','tự quyết','lựa chọn cá nhân'],wordFamily:['peer (n)','pressure (n/v)','pressurize (v)'],wordFamilyVi:['bạn đồng trang lứa (danh từ)','áp lực (danh từ/động từ)','gây áp lực (động từ)'],example:'"Many young people turn to crime because of peer pressure from their social circle."',exampleVi:'"Nhiều người trẻ sa vào tội phạm vì áp lực bạn bè từ vòng xã hội của họ."'},
+  {id:38,en:'break the cycle of crime',ipa:'/breɪk ðə ˈsaɪkl əv kraɪm/',pos:'v',vi:'Phá vòng lặp tội phạm',enDef:'To interrupt a pattern of criminal behavior that keeps repeating across generations or situations',collocations:['break the cycle of crime through education','difficult to break the cycle of crime','programs that break the cycle','break the cycle of reoffending'],collocationVi:['phá vòng lặp tội phạm thông qua giáo dục','khó phá vòng lặp tội phạm','các chương trình phá vỡ vòng lặp','phá vòng lặp tái phạm'],synonyms:['interrupt the pattern of crime','stop recidivism','end repeat offending'],synonymsVi:['gián đoạn vòng lặp tội phạm','ngăn chặn tái phạm','kết thúc tái phạm'],antonyms:['perpetuate crime','continue the cycle','maintain criminal behavior'],antonymsVi:['duy trì tội phạm','tiếp tục vòng lặp','duy trì hành vi tội phạm'],wordFamily:['break (v)','cycle (n)','crime (n)'],wordFamilyVi:['phá (động từ)','vòng lặp (danh từ)','tội phạm (danh từ)'],example:'"Education and job training can help break the cycle of crime in disadvantaged communities."',exampleVi:'"Giáo dục và đào tạo nghề có thể giúp phá vỡ vòng lặp tội phạm ở các cộng đồng khó khăn."'},
+  {id:39,en:'reduce reoffending rates',ipa:'/rɪˈdjuːs ˌriːəˈfendɪŋ reɪts/',pos:'v',vi:'Giảm tỷ lệ tái phạm',enDef:'To lower the number of former offenders who commit crimes again after being released',collocations:['programs to reduce reoffending','rehabilitation reduces reoffending','reduce reoffending through education','strategies to reduce reoffending'],collocationVi:['chương trình giảm tái phạm','cải tạo giảm tái phạm','giảm tái phạm thông qua giáo dục','chiến lược giảm tái phạm'],synonyms:['lower recidivism','cut repeat offending','decrease criminal relapse'],synonymsVi:['giảm tái phạm','cắt giảm tái phạm','giảm tái phạm tội phạm'],antonyms:['increase reoffending','higher recidivism','worsening crime rates'],antonymsVi:['tăng tái phạm','tái phạm cao hơn','tỷ lệ tội phạm xấu hơn'],wordFamily:['reoffend (v)','reoffender (n)','rate (n)'],wordFamilyVi:['tái phạm (động từ)','người tái phạm (danh từ)','tỷ lệ (danh từ)'],example:'"Rehabilitation programs are proven to significantly reduce reoffending rates."',exampleVi:'"Các chương trình cải tạo được chứng minh là giảm đáng kể tỷ lệ tái phạm."'},
+  {id:40,en:'address root causes of crime',ipa:'/əˈdres ruːt ˈkɔːzɪz əv kraɪm/',pos:'v',vi:'Giải quyết nguyên nhân gốc rễ của tội phạm',enDef:'To deal with the fundamental underlying reasons why crime occurs, such as poverty or lack of education',collocations:['address root causes','tackle root causes of crime','policies addressing root causes','address the root causes of juvenile crime'],collocationVi:['giải quyết nguyên nhân gốc rễ','giải quyết nguyên nhân gốc rễ của tội phạm','các chính sách giải quyết nguyên nhân gốc rễ','giải quyết nguyên nhân gốc rễ của tội phạm trẻ em'],synonyms:['tackle underlying causes','deal with the source of crime','solve fundamental problems'],synonymsVi:['giải quyết nguyên nhân cơ bản','giải quyết nguồn gốc của tội phạm','giải quyết các vấn đề căn bản'],antonyms:['treat symptoms only','ignore underlying causes'],antonymsVi:['chỉ điều trị triệu chứng','bỏ qua nguyên nhân cơ bản'],wordFamily:['address (v)','root (n/adj)','cause (n/v)'],wordFamilyVi:['giải quyết (động từ)','gốc rễ (danh từ/tính từ)','nguyên nhân (danh từ/động từ)'],example:'"To effectively reduce crime, governments must address the root causes such as poverty and inequality."',exampleVi:'"Để giảm tội phạm hiệu quả, chính phủ phải giải quyết nguyên nhân gốc rễ như nghèo đói và bất bình đẳng."'},
+  {id:41,en:'pose a threat to society',ipa:'/pəʊz ə θret tə səˈsaɪəti/',pos:'v',vi:'Gây nguy hiểm cho xã hội',enDef:'To be a danger to the safety or wellbeing of the community',collocations:['pose a serious threat','pose a threat to public safety','crimes that pose a threat','organized crime poses a threat'],collocationVi:['gây mối đe dọa nghiêm trọng','gây nguy hiểm cho an toàn công cộng','tội phạm gây mối đe dọa','tội phạm có tổ chức gây nguy hiểm'],synonyms:['endanger society','threaten the community','be a danger to the public'],synonymsVi:['gây nguy hiểm cho xã hội','đe dọa cộng đồng','là mối nguy cho công chúng'],antonyms:['protect society','contribute positively','benefit the community'],antonymsVi:['bảo vệ xã hội','đóng góp tích cực','có ích cho cộng đồng'],wordFamily:['pose (v)','threat (n)','threaten (v)','threatening (adj)'],wordFamilyVi:['gây ra (động từ)','mối đe dọa (danh từ)','đe dọa (động từ)','đe dọa (tính từ)'],example:'"Organized crime poses a serious threat to society and must be dealt with firmly."',exampleVi:'"Tội phạm có tổ chức gây nguy hiểm nghiêm trọng cho xã hội và phải được xử lý cứng rắn."'},
+  {id:42,en:'maintain law and order',ipa:'/meɪnˈteɪn lɔː ænd ˈɔːdər/',pos:'v',vi:'Duy trì trật tự',enDef:'To keep society running smoothly and safely by enforcing laws and preventing crime',collocations:['maintain law and order in society','struggle to maintain law and order','police maintain law and order','essential to maintain law and order'],collocationVi:['duy trì trật tự trong xã hội','vật lộn để duy trì trật tự','cảnh sát duy trì trật tự','cần thiết duy trì trật tự'],synonyms:['uphold order','keep the peace','ensure social stability'],synonymsVi:['duy trì trật tự','giữ hòa bình','đảm bảo ổn định xã hội'],antonyms:['allow chaos','permit disorder','undermine stability'],antonymsVi:['để hỗn loạn','cho phép mất trật tự','làm suy yếu ổn định'],wordFamily:['maintain (v)','law (n)','order (n)'],wordFamilyVi:['duy trì (động từ)','pháp luật (danh từ)','trật tự (danh từ)'],example:'"The primary role of police is to maintain law and order in the community."',exampleVi:'"Vai trò chính của cảnh sát là duy trì trật tự trong cộng đồng."'},
+  {id:43,en:'bring offenders to justice',ipa:'/brɪŋ əˈfendərz tə ˈdʒʌstɪs/',pos:'v',vi:'Đưa tội phạm ra trước công lý',enDef:'To catch criminals and make sure they are properly punished through the legal system',collocations:['bring offenders to justice quickly','the duty to bring offenders to justice','police bring offenders to justice','fail to bring offenders to justice'],collocationVi:['đưa tội phạm ra trước công lý nhanh chóng','nhiệm vụ đưa tội phạm ra trước công lý','cảnh sát đưa tội phạm ra trước công lý','thất bại trong việc đưa tội phạm ra trước công lý'],synonyms:['prosecute criminals','hold offenders accountable','ensure perpetrators are punished'],synonymsVi:['truy tố tội phạm','buộc tội phạm chịu trách nhiệm','đảm bảo thủ phạm bị trừng phạt'],antonyms:['let offenders go free','allow impunity','ignore crime'],antonymsVi:['để tội phạm tự do','để không bị trừng phạt','bỏ qua tội phạm'],wordFamily:['offend (v)','offender (n)','justice (n)','just (adj)'],wordFamilyVi:['vi phạm (động từ)','người vi phạm (danh từ)','công lý (danh từ)','công bằng (tính từ)'],example:'"It is the responsibility of the police to bring offenders to justice."',exampleVi:'"Đây là trách nhiệm của cảnh sát để đưa tội phạm ra trước công lý."'},
+  {id:44,en:'tackle crime effectively',ipa:'/ˈtækl kraɪm ɪˈfektɪvli/',pos:'v',vi:'Xử lý tội phạm hiệu quả',enDef:'To deal with crime successfully using appropriate methods and strategies',collocations:['tackle crime effectively through education','government must tackle crime effectively','tackle crime by addressing its causes','fail to tackle crime effectively'],collocationVi:['xử lý tội phạm hiệu quả thông qua giáo dục','chính phủ phải xử lý tội phạm hiệu quả','xử lý tội phạm bằng cách giải quyết nguyên nhân','thất bại trong việc xử lý tội phạm hiệu quả'],synonyms:['combat crime successfully','fight crime effectively','deal with crime decisively'],synonymsVi:['chống tội phạm thành công','chống tội phạm hiệu quả','xử lý tội phạm quyết đoán'],antonyms:['fail to address crime','allow crime to flourish','ignore criminal activity'],antonymsVi:['thất bại trong việc giải quyết tội phạm','để tội phạm phát triển','bỏ qua hoạt động tội phạm'],wordFamily:['tackle (v)','crime (n)','effective (adj)','effectively (adv)'],wordFamilyVi:['xử lý (động từ)','tội phạm (danh từ)','hiệu quả (tính từ)','một cách hiệu quả (trạng từ)'],example:'"To tackle crime effectively, authorities must combine punishment with rehabilitation."',exampleVi:'"Để xử lý tội phạm hiệu quả, chính quyền phải kết hợp trừng phạt với cải tạo."'},
+  {id:45,en:'dysfunctional family environment',ipa:'/dɪsˈfʌŋkʃənl ˈfæmɪli ɪnˈvaɪrənmənt/',pos:'n',vi:'Môi trường gia đình không lành mạnh',enDef:'A home situation that is abnormal or unhealthy, often involving abuse, neglect, or conflict between family members',collocations:['come from a dysfunctional family','dysfunctional family environment leads to crime','impact of a dysfunctional family','grow up in a dysfunctional environment'],collocationVi:['xuất thân từ gia đình không lành mạnh','môi trường gia đình không lành mạnh dẫn đến tội phạm','tác động của gia đình không lành mạnh','lớn lên trong môi trường không lành mạnh'],synonyms:['troubled home environment','unstable family situation','harmful household'],synonymsVi:['môi trường gia đình rắc rối','tình trạng gia đình không ổn định','hộ gia đình có hại'],antonyms:['stable family environment','nurturing household','supportive home'],antonymsVi:['môi trường gia đình ổn định','hộ gia đình nuôi dưỡng','ngôi nhà ủng hộ'],wordFamily:['dysfunctional (adj)','dysfunction (n)','family (n)'],wordFamilyVi:['không lành mạnh (tính từ)','rối loạn chức năng (danh từ)','gia đình (danh từ)'],example:'"Many young offenders come from a dysfunctional family environment."',exampleVi:'"Nhiều tội phạm trẻ xuất thân từ môi trường gia đình không lành mạnh."'},
+  {id:46,en:'lack emotional maturity',ipa:'/læk ɪˈməʊʃənl məˈtʃʊərɪti/',pos:'v',vi:'Thiếu trưởng thành cảm xúc',enDef:'To not have the emotional development or control expected for one\'s age, leading to impulsive or harmful behavior',collocations:['children lack emotional maturity','lack of emotional maturity in teenagers','emotional immaturity leads to crime','lack emotional maturity to understand consequences'],collocationVi:['trẻ em thiếu trưởng thành cảm xúc','thiếu trưởng thành cảm xúc ở thanh thiếu niên','thiếu trưởng thành cảm xúc dẫn đến tội phạm','thiếu trưởng thành cảm xúc để hiểu hậu quả'],synonyms:['be emotionally immature','lack self-control','be emotionally underdeveloped'],synonymsVi:['thiếu trưởng thành về cảm xúc','thiếu tự chủ','thiếu phát triển cảm xúc'],antonyms:['have emotional maturity','demonstrate self-control','be emotionally developed'],antonymsVi:['có trưởng thành cảm xúc','thể hiện tự chủ','phát triển cảm xúc'],wordFamily:['emotional (adj)','maturity (n)','mature (adj/v)'],wordFamilyVi:['cảm xúc (tính từ)','sự trưởng thành (danh từ)','trưởng thành (tính từ/động từ)'],example:'"Young offenders often lack emotional maturity and act without considering the consequences."',exampleVi:'"Tội phạm trẻ thường thiếu trưởng thành cảm xúc và hành động mà không cân nhắc hậu quả."'},
+  {id:47,en:'early intervention strategies',ipa:'/ˈɜːli ˌɪntəˈvenʃən ˈstrætɪdʒɪz/',pos:'n',vi:'Chiến lược can thiệp sớm',enDef:'Programs and actions implemented at an early stage to prevent problems from developing further',collocations:['implement early intervention strategies','effective early intervention','early intervention prevents crime','early intervention for at-risk youth'],collocationVi:['thực hiện chiến lược can thiệp sớm','can thiệp sớm hiệu quả','can thiệp sớm ngăn chặn tội phạm','can thiệp sớm cho thanh niên có nguy cơ'],synonyms:['proactive measures','preventive programs','early prevention initiatives'],synonymsVi:['biện pháp chủ động','chương trình phòng ngừa','sáng kiến phòng ngừa sớm'],antonyms:['reactive measures','late intervention','punishment after the fact'],antonymsVi:['biện pháp phản ứng','can thiệp muộn','trừng phạt sau khi xảy ra'],wordFamily:['intervene (v)','intervention (n)','strategy (n)'],wordFamilyVi:['can thiệp (động từ)','sự can thiệp (danh từ)','chiến lược (danh từ)'],example:'"Early intervention strategies are crucial in preventing youth from becoming involved in crime."',exampleVi:'"Các chiến lược can thiệp sớm rất quan trọng trong việc ngăn chặn thanh niên tham gia tội phạm."'},
+  {id:48,en:'undermine social stability',ipa:'/ˌʌndəˈmaɪn ˈsəʊʃl stəˈbɪlɪti/',pos:'v',vi:'Làm suy yếu ổn định xã hội',enDef:'To weaken or damage the foundations that keep society functioning peacefully',collocations:['crime undermines social stability','undermine the stability of a nation','actions that undermine stability','undermine public trust'],collocationVi:['tội phạm làm suy yếu ổn định xã hội','làm suy yếu sự ổn định của một quốc gia','các hành động làm suy yếu ổn định','làm suy yếu niềm tin công chúng'],synonyms:['destabilize society','threaten social order','damage societal foundations'],synonymsVi:['gây mất ổn định xã hội','đe dọa trật tự xã hội','gây tổn hại nền tảng xã hội'],antonyms:['strengthen social stability','enhance social cohesion','support community harmony'],antonymsVi:['tăng cường ổn định xã hội','nâng cao gắn kết xã hội','hỗ trợ hòa hợp cộng đồng'],wordFamily:['undermine (v)','social (adj)','stability (n)','stable (adj)'],wordFamilyVi:['làm suy yếu (động từ)','xã hội (tính từ)','sự ổn định (danh từ)','ổn định (tính từ)'],example:'"Widespread crime undermines social stability and discourages economic investment."',exampleVi:'"Tội phạm lan rộng làm suy yếu ổn định xã hội và cản trở đầu tư kinh tế."'},
+  {id:49,en:'offender',ipa:'/əˈfendər/',pos:'n',vi:'Người phạm tội',enDef:'A person who commits a crime or does something wrong',collocations:['young offender','first-time offender','repeat offender','serious offender'],collocationVi:['tội phạm trẻ','người phạm tội lần đầu','tội phạm tái phạm','tội phạm nghiêm trọng'],synonyms:['criminal','perpetrator','wrongdoer','culprit'],synonymsVi:['tội phạm','thủ phạm','kẻ làm sai','kẻ có tội'],antonyms:['victim','innocent person','law-abiding citizen'],antonymsVi:['nạn nhân','người vô tội','công dân tuân thủ pháp luật'],wordFamily:['offend (v)','offense (n)','offensive (adj)'],wordFamilyVi:['vi phạm (động từ)','tội phạm (danh từ)','mang tính vi phạm (tính từ)'],example:'"Programs are needed to help young offenders turn their lives around."',exampleVi:'"Các chương trình cần được thiết kế để giúp tội phạm trẻ thay đổi cuộc sống của họ."'},
+  {id:50,en:'volatile situations',ipa:'/ˈvɒlətaɪl ˌsɪtʃuˈeɪʃənz/',pos:'n',vi:'Tình huống dễ mất kiểm soát',enDef:'Situations that can change suddenly and dangerously, becoming unpredictable and difficult to control',collocations:['volatile family situations','handle volatile situations','volatile situations lead to crime','children in volatile situations'],collocationVi:['tình huống gia đình dễ mất kiểm soát','xử lý tình huống dễ mất kiểm soát','tình huống dễ mất kiểm soát dẫn đến tội phạm','trẻ em trong tình huống dễ mất kiểm soát'],synonyms:['unstable situations','explosive circumstances','unpredictable environments'],synonymsVi:['tình huống không ổn định','hoàn cảnh có thể bùng nổ','môi trường không thể đoán trước'],antonyms:['stable situations','calm environments','peaceful circumstances'],antonymsVi:['tình huống ổn định','môi trường bình tĩnh','hoàn cảnh hòa bình'],wordFamily:['volatile (adj)','volatility (n)','situation (n)'],wordFamilyVi:['dễ biến động (tính từ)','sự bất ổn (danh từ)','tình huống (danh từ)'],example:'"Children who grow up in volatile situations are more likely to engage in criminal behavior."',exampleVi:'"Trẻ em lớn lên trong các tình huống dễ mất kiểm soát có nhiều khả năng tham gia hành vi tội phạm hơn."'},
+  {id:51,en:'install surveillance cameras',ipa:'/ɪnˈstɔːl səˈveɪləns ˈkæmərəz/',pos:'v phrase',vi:'Lắp đặt camera giám sát',enDef:'To set up cameras in public or private areas in order to monitor activity and help prevent or detect crime',collocations:['install surveillance cameras in public areas','install CCTV cameras','surveillance cameras deter crime','footage from surveillance cameras'],collocationVi:['lắp camera giám sát ở nơi công cộng','lắp camera CCTV','camera giám sát giúp răn đe tội phạm','hình ảnh từ camera giám sát'],synonyms:['set up CCTV','install monitoring devices','install security cameras'],synonymsVi:['lắp đặt camera an ninh','lắp thiết bị giám sát','lắp camera bảo vệ'],antonyms:['remove surveillance','operate without monitoring','leave areas unmonitored'],antonymsVi:['gỡ bỏ giám sát','hoạt động không giám sát','để khu vực không được theo dõi'],wordFamily:['surveillance (n)','surveil (v)','camera (n)','install (v)'],wordFamilyVi:['sự giám sát (danh từ)','giám sát (động từ)','camera (danh từ)','lắp đặt (động từ)'],example:'"Many cities have installed surveillance cameras in public areas to deter potential offenders."',exampleVi:'"Nhiều thành phố đã lắp đặt camera giám sát ở nơi công cộng để răn đe những kẻ có ý định phạm tội."'},
+  {id:52,en:'crime of passion',ipa:'/kraɪm əv ˈpæʃən/',pos:'n phrase',vi:'Tội phạm do bốc đồng / cảm xúc',enDef:'A crime, especially murder, committed in a sudden fit of intense emotion such as anger or jealousy rather than after careful planning',collocations:['classify as a crime of passion','a crime of passion involving jealousy','commit a crime of passion','crime of passion defense'],collocationVi:['xếp loại là tội phạm do bốc đồng','tội phạm do bốc đồng liên quan đến sự ghen tuông','phạm tội vì bốc đồng','biện hộ tội phạm do bốc đồng'],synonyms:['impulsive crime','emotionally driven offense','unpremeditated crime'],synonymsVi:['tội phạm bốc đồng','tội phạm do cảm xúc thúc đẩy','tội phạm không có chủ đích'],antonyms:['premeditated crime','planned offense','calculated crime'],antonymsVi:['tội phạm có chủ đích','tội phạm được lên kế hoạch','tội phạm tính toán trước'],wordFamily:['crime (n)','passion (n)','passionate (adj)'],wordFamilyVi:['tội phạm (danh từ)','cảm xúc mãnh liệt (danh từ)','đầy nhiệt huyết/bốc đồng (tính từ)'],example:'"A crime of passion is often treated differently by the courts from a premeditated offense."',exampleVi:'"Một tội phạm do bốc đồng thường được tòa án xử lý khác với một tội phạm có chủ đích."'},
+  {id:53,en:'turn to crime',ipa:'/tɜːn tə kraɪm/',pos:'v phrase',vi:'Sa vào con đường phạm tội',enDef:'To start engaging in criminal activity, often as a result of difficult circumstances or negative influences',collocations:['turn to crime out of desperation','more likely to turn to crime','turn to crime at a young age','factors that cause people to turn to crime'],collocationVi:['sa vào tội phạm vì tuyệt vọng','có khả năng sa vào tội phạm cao hơn','sa vào tội phạm từ khi còn trẻ','các yếu tố khiến người ta sa vào tội phạm'],synonyms:['resort to crime','become a criminal','take up criminal activity'],synonymsVi:['dùng đến tội phạm như giải pháp','trở thành tội phạm','bắt đầu hoạt động phạm pháp'],antonyms:['avoid crime','lead a law-abiding life','stay on the right path'],antonymsVi:['tránh xa tội phạm','sống tuân thủ pháp luật','đi đúng hướng'],wordFamily:['turn (v)','crime (n)','criminal (n/adj)'],wordFamilyVi:['chuyển hướng/sa vào (động từ)','tội phạm (danh từ)','tội phạm (danh từ/tính từ)'],example:'"Without proper guidance, some young people turn to crime as a way to survive."',exampleVi:'"Nếu không được hướng dẫn đúng cách, một số người trẻ sa vào con đường phạm tội như một cách để sinh tồn."'},
+  {id:54,en:'be tough on crime',ipa:'/biː tʌf ɒn kraɪm/',pos:'adj phrase',vi:'Cứng rắn / nghiêm khắc với tội phạm',enDef:'To deal with crime in a strict and severe way, often through harsh punishments and strong law enforcement',collocations:['government promises to be tough on crime','tough-on-crime policies','be tough on crime and its causes','politicians who are tough on crime'],collocationVi:['chính phủ hứa cứng rắn với tội phạm','chính sách cứng rắn với tội phạm','cứng rắn với tội phạm và nguyên nhân của nó','các chính trị gia cứng rắn với tội phạm'],synonyms:['take a hard line on crime','adopt a strict approach to crime','be strict on offenders'],synonymsVi:['có lập trường cứng rắn với tội phạm','áp dụng phương pháp nghiêm khắc với tội phạm','nghiêm khắc với người phạm tội'],antonyms:['be soft on crime','take a lenient approach','go easy on offenders'],antonymsVi:['khoan dung với tội phạm','áp dụng phương pháp nhẹ nhàng','dễ dãi với người phạm tội'],wordFamily:['tough (adj)','toughness (n)','toughen (v)'],wordFamilyVi:['cứng rắn (tính từ)','sự cứng rắn (danh từ)','làm cứng rắn hơn (động từ)'],example:'"The new government has promised to be tough on crime by increasing prison sentences."',exampleVi:'"Chính phủ mới đã hứa sẽ cứng rắn với tội phạm bằng cách tăng mức án tù."'},
+  {id:55,en:'be soft on crime',ipa:'/biː sɒft ɒn kraɪm/',pos:'adj phrase',vi:'Khoan dung / xử lý nhẹ tay với tội phạm',enDef:'To deal with crime in a lenient way, with light punishments that critics believe fail to discourage offenders',collocations:['accused of being soft on crime','soft-on-crime approach','being soft on crime increases reoffending','critics say the policy is soft on crime'],collocationVi:['bị cáo buộc khoan dung với tội phạm','cách tiếp cận khoan dung với tội phạm','khoan dung với tội phạm làm tăng tái phạm','người chỉ trích cho rằng chính sách quá nhẹ tay với tội phạm'],synonyms:['be lenient towards offenders','take a lenient approach to crime','go easy on criminals'],synonymsVi:['khoan dung với người phạm tội','áp dụng phương pháp khoan dung với tội phạm','dễ dãi với tội phạm'],antonyms:['be tough on crime','take a hard line on crime','punish offenders severely'],antonymsVi:['cứng rắn với tội phạm','có lập trường cứng rắn với tội phạm','trừng phạt tội phạm nghiêm khắc'],wordFamily:['soft (adj)','softness (n)','soften (v)'],wordFamilyVi:['nhẹ tay/khoan dung (tính từ)','sự nhẹ tay (danh từ)','làm dịu/giảm nhẹ (động từ)'],example:'"Being soft on crime may encourage repeat offenders to break the law again."',exampleVi:'"Việc xử lý nhẹ tay với tội phạm có thể khiến những kẻ tái phạm tiếp tục vi phạm pháp luật."'},
+  {id:56,en:'put sb on probation',ipa:'/pʊt ɒn prəˈbeɪʃən/',pos:'v phrase',vi:'Cho quản chế / án treo có giám sát',enDef:'To allow an offender to remain in the community under supervision instead of going to prison, on the condition that they behave well',collocations:['put offenders on probation','released on probation','put on probation for a year','breach the terms of probation'],collocationVi:['cho người phạm tội quản chế','được thả với điều kiện quản chế','bị quản chế trong một năm','vi phạm điều kiện quản chế'],synonyms:['place under supervised release','grant a suspended sentence','allow community supervision'],synonymsVi:['đặt dưới sự giám sát có điều kiện','cho hưởng án treo','cho phép giám sát tại cộng đồng'],antonyms:['send to prison','impose a custodial sentence','incarcerate'],antonymsVi:['gửi vào tù','áp đặt án giam giữ','bỏ tù'],wordFamily:['probation (n)','probationary (adj)','probationer (n)'],wordFamilyVi:['sự quản chế (danh từ)','thuộc về quản chế (tính từ)','người bị quản chế (danh từ)'],example:'"First-time offenders are often put on probation rather than sent straight to prison."',exampleVi:'"Người phạm tội lần đầu thường bị quản chế thay vì bị đưa thẳng vào tù."'},
+  {id:57,en:'impose a ban on',ipa:'/ɪmˈpəʊz ə bæn ɒn/',pos:'v phrase',vi:'Áp đặt lệnh cấm đối với',enDef:'To officially forbid a particular activity, substance, or item by law or regulation',collocations:['impose a ban on weapons','impose a strict ban on','impose a nationwide ban on','government imposed a ban on'],collocationVi:['áp đặt lệnh cấm đối với vũ khí','áp đặt lệnh cấm nghiêm ngặt','áp đặt lệnh cấm toàn quốc','chính phủ áp đặt lệnh cấm'],synonyms:['prohibit','outlaw','enforce a prohibition on','forbid'],synonymsVi:['cấm','đặt ngoài vòng pháp luật','thực thi lệnh cấm','cấm đoán'],antonyms:['lift a ban','legalize','permit','allow'],antonymsVi:['gỡ bỏ lệnh cấm','hợp pháp hóa','cho phép','cho phép'],wordFamily:['ban (n/v)','banned (adj)','impose (v)'],wordFamilyVi:['lệnh cấm (danh từ/động từ)','bị cấm (tính từ)','áp đặt (động từ)'],example:'"The government imposed a ban on the sale of dangerous weapons to minors."',exampleVi:'"Chính phủ đã áp đặt lệnh cấm bán vũ khí nguy hiểm cho trẻ vị thành niên."'},
+  {id:58,en:'suspect',ipa:'/ˈsʌspekt/',pos:'n',vi:'Nghi phạm',enDef:'A person who is believed to have committed a crime but has not yet been proven guilty',collocations:['prime suspect','question a suspect','suspect in custody','identify a suspect'],collocationVi:['nghi phạm chính','thẩm vấn nghi phạm','nghi phạm bị tạm giữ','xác định nghi phạm'],synonyms:['person of interest','accused','alleged offender'],synonymsVi:['người bị nghi vấn','người bị buộc tội','người bị cho là phạm tội'],antonyms:['witness','victim','convicted criminal'],antonymsVi:['nhân chứng','nạn nhân','tội phạm đã bị kết án'],wordFamily:['suspect (n/v)','suspicion (n)','suspicious (adj)'],wordFamilyVi:['nghi phạm/nghi ngờ (danh từ/động từ)','sự nghi ngờ (danh từ)','đáng nghi (tính từ)'],example:'"The suspect was later confirmed to be the offender after forensic evidence was examined."',exampleVi:'"Nghi phạm sau đó được xác nhận chính là kẻ phạm tội sau khi bằng chứng pháp y được xem xét."'},
+  {id:59,en:'detention',ipa:'/dɪˈtenʃən/',pos:'n',vi:'Sự giam giữ / tạm giữ',enDef:'The act of officially keeping someone, especially a suspect or young offender, in custody for a period of time',collocations:['hold sb in detention','juvenile detention center','release from detention','prolonged detention'],collocationVi:['giam giữ ai đó','trung tâm giam giữ trẻ vị thành niên','được thả khỏi nơi giam giữ','giam giữ kéo dài'],synonyms:['custody','confinement','imprisonment'],synonymsVi:['tạm giam','sự giam cầm','sự bỏ tù'],antonyms:['freedom','release','liberty'],antonymsVi:['tự do','được thả','sự tự do'],wordFamily:['detain (v)','detainee (n)','detention (n)'],wordFamilyVi:['giam giữ (động từ)','người bị giam giữ (danh từ)','sự giam giữ (danh từ)'],example:'"Juveniles should not face long periods of detention for minor offenses."',exampleVi:'"Trẻ vị thành niên không nên bị giam giữ trong thời gian dài vì những lỗi nhỏ."'},
+  {id:60,en:'sentence',ipa:'/ˈsentəns/',pos:'n',vi:'Bản án / Phán quyết',enDef:'The official punishment given by a court of law to someone found guilty of a crime',collocations:['hand down a sentence','lenient sentence','harsh sentence','reduce a sentence'],collocationVi:['tuyên bản án','bản án nhẹ','bản án nặng','giảm án'],synonyms:['verdict','judgment','penalty'],synonymsVi:['phán quyết','sự phán xét','hình phạt'],antonyms:['acquittal','pardon','exoneration'],antonymsVi:['sự tuyên vô tội','sự ân xá','sự miễn tội'],wordFamily:['sentence (n/v)','sentencing (n)','sentenced (adj)'],wordFamilyVi:['bản án/tuyên án (danh từ/động từ)','việc tuyên án (danh từ)','bị tuyên án (tính từ)'],example:'"The judge handed down a lenient sentence due to the offender\'s young age."',exampleVi:'"Thẩm phán đã tuyên một bản án nhẹ do tuổi còn nhỏ của người phạm tội."'},
+  {id:61,en:'turn to drugs',ipa:'/tɜːn tə drʌɡz/',pos:'v phrase',vi:'Sa vào ma túy',enDef:'To start using illegal drugs, often as a way of coping with problems or due to negative influences',collocations:['turn to drugs under peer pressure','turn to drugs to cope with stress','at risk of turning to drugs','prevent young people from turning to drugs'],collocationVi:['sa vào ma túy do áp lực bạn bè','sa vào ma túy để đối mặt với áp lực','có nguy cơ sa vào ma túy','ngăn người trẻ sa vào ma túy'],synonyms:['become addicted to drugs','resort to substance abuse','start using narcotics'],synonymsVi:['nghiện ma túy','dùng đến lạm dụng chất gây nghiện','bắt đầu sử dụng chất kích thích'],antonyms:['stay drug-free','avoid substance abuse','lead a healthy lifestyle'],antonymsVi:['không dùng ma túy','tránh lạm dụng chất gây nghiện','sống lành mạnh'],wordFamily:['drug (n)','drug abuse (n)','drug addiction (n)'],wordFamilyVi:['ma túy (danh từ)','lạm dụng ma túy (danh từ)','nghiện ma túy (danh từ)'],example:'"Many youths turn to drugs due to peer pressure and a lack of parental guidance."',exampleVi:'"Nhiều thanh thiếu niên sa vào ma túy do áp lực bạn bè và thiếu sự hướng dẫn của cha mẹ."'},
+  {id:62,en:'reduce crime rates',ipa:'/rɪˈdjuːs kraɪm reɪts/',pos:'v phrase',vi:'Giảm tỷ lệ tội phạm',enDef:'To lower the number of crimes committed within a community or society over a period of time',collocations:['policies to reduce crime rates','effectively reduce crime rates','reduce crime rates in urban areas','measures aimed at reducing crime rates'],collocationVi:['chính sách giảm tỷ lệ tội phạm','giảm tỷ lệ tội phạm hiệu quả','giảm tỷ lệ tội phạm ở khu vực đô thị','các biện pháp nhằm giảm tỷ lệ tội phạm'],synonyms:['lower crime levels','decrease criminal activity','cut down on crime'],synonymsVi:['giảm mức độ tội phạm','giảm hoạt động phạm pháp','giảm bớt tội phạm'],antonyms:['increase crime rates','worsen crime levels','allow crime to rise'],antonymsVi:['tăng tỷ lệ tội phạm','làm xấu thêm mức độ tội phạm','để tội phạm gia tăng'],wordFamily:['reduce (v)','reduction (n)','crime (n)','rate (n)'],wordFamilyVi:['giảm (động từ)','sự giảm (danh từ)','tội phạm (danh từ)','tỷ lệ (danh từ)'],example:'"Investing in education and youth programs can help reduce crime rates in the long term."',exampleVi:'"Đầu tư vào giáo dục và các chương trình cho thanh thiếu niên có thể giúp giảm tỷ lệ tội phạm trong dài hạn."'}
+];
+
+// ===== AUDIO =====
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function getAudioCtx(){
+  try{if(!audioCtx)audioCtx=new AudioCtx();return audioCtx}catch(e){console.warn("Audio context failed:",e);return null}
+}
+function playDing(){
+  try{
+    const c=getAudioCtx();if(!c)return;
+    const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=880;g.gain.value=0.3;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.5);o.stop(c.currentTime+0.5)
+  }catch(e){console.warn("Ding failed:",e)}
+}
+function playBuzz(){
+  try{
+    const c=getAudioCtx();if(!c)return;
+    const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=150;g.gain.value=0.15;o.start();g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.stop(c.currentTime+0.3)
+  }catch(e){console.warn("Buzz failed:",e)}
+}
+function speakWord(word){
+  try{
+    if(!window.speechSynthesis)return;
+    const u=new SpeechSynthesisUtterance(word);u.lang='en-US';u.rate=0.85;speechSynthesis.speak(u)
+  }catch(e){console.warn("Speech failed:",e)}
+}
+
+// ===== CONFETTI =====
+function showConfetti(big=false){
+  const c=document.createElement('div');c.className='confetti';document.body.appendChild(c);
+  const count=big?70:32;
+  const colors=['#FFAFCC','#457B9D','#A8DADC','#FFD700','#FF6B6B','#9b5de5','#00bbf9'];
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div');
+    const size=4+Math.random()*8;
+    const shape=Math.random()>0.5?'50%':'2px';
+    const dur=(1.2+Math.random()*1.8).toFixed(2);
+    const rot=Math.floor(Math.random()*720-360);
+    p.style.cssText=`position:fixed;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${shape};left:${Math.random()*100}%;top:-10px;z-index:9999;--rot:${rot}deg;animation:confettiFall ${dur}s cubic-bezier(.25,.46,.45,.94) forwards`;
+    c.appendChild(p)
+  }
+  if(!document.getElementById('confettiKeyframes')){
+    const s=document.createElement('style');s.id='confettiKeyframes';
+    s.textContent='@keyframes confettiFall{to{top:100%;opacity:0;transform:translateX(calc((var(--rot,180) / 360) * 60px)) rotate(var(--rot,180deg))}}';
+    document.head.appendChild(s);
+  }
+  setTimeout(()=>{c.remove()},3000)
+}
+
+// ===== TOAST =====
+function showToast(msg,type='success'){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div');t.className='toast';
+  t.style.background=type==='success'?'var(--success)':'var(--error)';
+  t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2500)
+}
+
+// ===== STATE =====
+let currentScreen='home';
+let currentGame=null;
+let gameQuestions=[];
+let currentQ=0;
+let score=0;
+let answered=false;
+
+// Progress kept in memory for this session (browser storage APIs are not available in this environment)
+let progress={p1:0,p2:0,p3:0,p4:0};
+
+function saveProgress(){
+  // No-op persistence placeholder — progress is kept in memory for the session.
+}
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+
+// ===== RENDER =====
+function render(){
+  const app=document.getElementById('app');
+  if(!app){console.error("App container not found!");return}
+  switch(currentScreen){
+    case 'home':renderHome(app);break;
+    case 'vocab':renderVocabList(app);break;
+    case 'game':renderGame(app);break;
+    case 'result':renderResult(app);break;
+  }
+  if(window.lucide){lucide.createIcons();}
+}
+
+function renderHome(app){
+  const total=VOCAB.length;
+  const learned=Math.round((progress.p1+progress.p2+progress.p3+progress.p4)/4);
+  app.innerHTML=`
+  <div class="flex flex-col items-center justify-center min-h-full p-6 fade-in">
+    <div class="text-center mb-8">
+      <div class="text-6xl mb-4 home-emoji">⚖️</div>
+      <h1 class="text-2xl font-800 mb-2" style="color:var(--dark)">VOCABULARY GAME</h1>
+      <h2 class="text-xl font-700 mb-2" style="color:var(--accent)">CRIME &amp; PUNISHMENT</h2>
+      <p class="text-sm opacity-70" style="color:var(--dark)">IELTS 7.0+ Vocabulary • ${total} từ vựng</p>
+    </div>
+    <div class="w-full max-w-md mb-8">
+      <div class="flex justify-between text-xs font-600 mb-2" style="color:var(--dark)"><span>Tiến độ chung</span><span>${learned}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${learned}%"></div></div>
+    </div>
+    <div class="w-full max-w-md space-y-3">
+      <button onclick="startGame(1)" class="btn-primary w-full flex items-center gap-3 text-lg"><span>🔵</span> Phần 1: Multiple Choice</button>
+      <button onclick="startGame(2)" class="btn-pink w-full flex items-center gap-3 text-lg"><span>🟡</span> Phần 2: Fill in the Blank</button>
+      <button onclick="startGame(3)" class="btn-primary w-full flex items-center gap-3 text-lg"><span>🟣</span> Phần 3: Mixed Mode</button>
+      <button onclick="startGame(4)" class="btn-pink w-full flex items-center gap-3 text-lg"><span>🔴</span> Phần 4: Master Test</button>
+      <div class="border-t pt-3 mt-3" style="border-color:#ddd">
+        <button onclick="currentScreen='vocab';render()" class="w-full py-3 rounded-xl font-600 flex items-center justify-center gap-2" style="background:var(--dark);color:#fff"><span>📘</span> Danh sách từ vựng đầy đủ</button>
+      </div>
+    </div>
+    <div class="mt-6 grid grid-cols-4 gap-3 w-full max-w-md">
+      ${[['P1',progress.p1,'🔵'],['P2',progress.p2,'🟡'],['P3',progress.p3,'🟣'],['P4',progress.p4,'🔴']].map(([l,p,e])=>`<div class="text-center p-3 rounded-xl" style="background:#fff"><div class="text-lg">${e}</div><div class="text-xs font-600 mt-1">${l}</div><div class="text-xs opacity-60">${p}%</div></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function startGame(part){
+  currentGame=part;currentQ=0;score=0;answered=false;
+  if(part===1)generateMC();
+  else if(part===2)generateFIB();
+  else if(part===3)generateMixed();
+  else if(part===4)generateMaster();
+  currentScreen='game';render();
+}
+
+// ===== PART 1: MULTIPLE CHOICE =====
+function generateMC(){
+  gameQuestions=shuffle(VOCAB).map(v=>{
+    const wrongs=shuffle(VOCAB.filter(x=>x.id!==v.id)).slice(0,3);
+    const opts=shuffle([v,...wrongs]);
+    return{type:'mc',vocab:v,options:opts,correctId:v.id};
+  });
+}
+
+// ===== PART 2: FILL IN BLANK =====
+function generateFIB(){
+  gameQuestions=shuffle(VOCAB).map(v=>({type:'fib',vocab:v}));
+}
+
+// ===== PART 3: MIXED =====
+function generateMixed(){
+  const all=shuffle(VOCAB);
+  gameQuestions=[];
+  all.forEach((v,i)=>{
+    const mode=i%4;
+    if(mode===0){
+      const wrongs=shuffle(VOCAB.filter(x=>x.id!==v.id)).slice(0,3);
+      const opts=shuffle([v,...wrongs]);
+      gameQuestions.push({type:'mc',vocab:v,options:opts,correctId:v.id});
+    }else if(mode===1){
+      gameQuestions.push({type:'fib',vocab:v});
+    }else if(mode===2){
+      gameQuestions.push({type:'sentence',vocab:v});
+    }else{
+      const wrongs=shuffle(VOCAB.filter(x=>x.id!==v.id)).slice(0,3);
+      const opts=shuffle([v,...wrongs]);
+      gameQuestions.push({type:'mc_reverse',vocab:v,options:opts,correctId:v.id});
+    }
+  });
+}
+
+// ===== PART 4: MASTER =====
+function generateMaster(){
+  const all=shuffle(VOCAB);
+  gameQuestions=[];
+  all.forEach((v,i)=>{
+    const mode=i%2;
+    if(mode===0){
+      const wrongs=shuffle(VOCAB.filter(x=>x.id!==v.id)).slice(0,3);
+      const opts=shuffle([v,...wrongs]);
+      gameQuestions.push({type:'master_mc',vocab:v,options:opts,correctId:v.id});
+    }else{
+      gameQuestions.push({type:'sentence',vocab:v});
+    }
+  });
+}
+
+function renderGame(app){
+  if(currentQ>=gameQuestions.length){
+    const pct=Math.round(score/gameQuestions.length*100);
+    progress[`p${currentGame}`]=Math.max(progress[`p${currentGame}`],pct);
+    saveProgress();
+    currentScreen='result';render();return;
+  }
+  const q=gameQuestions[currentQ];
+  const titles=['','🔵 Multiple Choice','🟡 Fill in the Blank','🟣 Mixed Mode','🔴 Master Test'];
+  app.innerHTML=`
+  <div class="min-h-full p-4 fade-in">
+    <div class="max-w-lg mx-auto">
+      <div class="flex items-center justify-between mb-4">
+        <button onclick="currentScreen='home';render()" class="p-2 rounded-lg card-hover" style="background:#fff"><i data-lucide="arrow-left" style="width:20px;height:20px"></i></button>
+        <span class="font-700 text-sm" style="color:var(--dark)">${titles[currentGame]}</span>
+        <span class="text-sm font-600 px-3 py-1 rounded-full" style="background:#fff;color:var(--dark)">${currentQ+1}/${gameQuestions.length}</span>
+      </div>
+      <div class="progress-bar mb-6"><div class="progress-fill" style="width:${(currentQ/gameQuestions.length)*100}%"></div></div>
+      <div class="text-center mb-2"><span id="scoreTag" class="tag" style="background:var(--pink);color:var(--dark)">Score: ${score}/${currentQ}</span></div>
+      <div id="questionArea" class="slide-in"></div>
+      <div id="explanationArea" class="mt-4"></div>
+      <div id="nextBtnArea" class="mt-4 text-center"></div>
+    </div>
+  </div>`;
+  lucide.createIcons();
+  renderQuestion(q);
+}
+
+function renderQuestion(q){
+  const area=document.getElementById('questionArea');
+  if(q.type==='mc'){
+    area.innerHTML=`
+    <div class="rounded-2xl p-5 mb-4" style="background:#fff">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="tag" style="background:var(--bg)">${q.vocab.pos}</span>
+        <button onclick="speakWord('${q.vocab.en.replace(/'/g,"\\'")}')" class="p-1 rounded-full icon-spin" style="background:var(--pink);transition:transform .2s ease"><i data-lucide="volume-2" style="width:16px;height:16px"></i></button>
+      </div>
+      <p class="text-xl font-700 mb-1" style="color:var(--dark)">${q.vocab.vi}</p>
+      <p class="text-sm opacity-60">${q.vocab.enDef}</p>
+    </div>
+    <div class="space-y-3" id="optionsArea">
+      ${q.options.map((o,i)=>`<button class="option-btn" onclick="checkMC(${q.correctId},${o.id},this)">${String.fromCharCode(65+i)}. ${o.en}</button>`).join('')}
+    </div>`;
+  }else if(q.type==='mc_reverse'){
+    area.innerHTML=`
+    <div class="rounded-2xl p-5 mb-4" style="background:#fff">
+      <div class="flex items-center gap-2 mb-2"><span class="tag" style="background:var(--bg)">${q.vocab.pos}</span></div>
+      <p class="text-xl font-700 mb-1" style="color:var(--dark)">${q.vocab.en}</p>
+      <p class="text-sm opacity-60">Chọn nghĩa tiếng Việt đúng:</p>
+    </div>
+    <div class="space-y-3" id="optionsArea">
+      ${q.options.map((o,i)=>`<button class="option-btn" onclick="checkMC(${q.correctId},${o.id},this)">${String.fromCharCode(65+i)}. ${o.vi}</button>`).join('')}
+    </div>`;
+  }else if(q.type==='fib'){
+    area.innerHTML=`
+    <div class="rounded-2xl p-5 mb-4" style="background:#fff">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="tag" style="background:var(--bg)">${q.vocab.pos}</span>
+        <button onclick="speakWord('${q.vocab.en.replace(/'/g,"\\'")}')" class="p-1 rounded-full icon-spin" style="background:var(--pink);transition:transform .2s ease"><i data-lucide="volume-2" style="width:16px;height:16px"></i></button>
+      </div>
+      <p class="text-xl font-700 mb-1" style="color:var(--dark)">${q.vocab.vi}</p>
+      <p class="text-sm opacity-60 mb-3">${q.vocab.enDef}</p>
+      ${q.vocab.usage?`<p class="text-sm mb-3" style="color:var(--accent)">💡 Cấu trúc: ${q.vocab.usage}</p>`:''}
+    </div>
+    <div class="flex gap-2">
+      <input id="fibInput" class="input-field flex-1" placeholder="Nhập từ/cụm từ tiếng Anh..." autocomplete="off" onkeydown="if(event.key==='Enter')checkFIB()">
+      <button onclick="checkFIB()" class="btn-primary">Kiểm tra</button>
+    </div>`;
+    setTimeout(()=>{const inp=document.getElementById('fibInput');if(inp)inp.focus()},100);
+  }else if(q.type==='sentence'){
+    const sent=q.vocab.example.replace(/"/g,'');
+    const word=q.vocab.en.split('/')[0].trim();
+    const blank=sent.replace(new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'______');
+    area.innerHTML=`
+    <div class="rounded-2xl p-5 mb-4" style="background:#fff">
+      <div class="flex items-center gap-2 mb-2"><span class="tag" style="background:var(--bg)">${q.vocab.pos}</span></div>
+      <p class="text-sm opacity-60 mb-2">Điền từ/cụm từ thích hợp vào chỗ trống:</p>
+      <p class="text-lg font-600 mb-2" style="color:var(--dark)">${blank}</p>
+      <p class="text-sm" style="color:var(--accent)">💡 Nghĩa: ${q.vocab.vi}</p>
+    </div>
+    <div class="flex gap-2">
+      <input id="fibInput" class="input-field flex-1" placeholder="Nhập từ..." autocomplete="off" onkeydown="if(event.key==='Enter')checkSentence()">
+      <button onclick="checkSentence()" class="btn-primary">Kiểm tra</button>
+    </div>`;
+    setTimeout(()=>{const inp=document.getElementById('fibInput');if(inp)inp.focus()},100);
+  }else if(q.type==='master_mc'){
+    area.innerHTML=`
+    <div class="rounded-2xl p-5 mb-4" style="background:#fff">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="tag master-glow" style="background:#FFD700;color:#000;font-weight:bold">⭐ MASTER MODE</span>
+        <span class="text-xs font-600" style="color:var(--error)">HARD</span>
+      </div>
+      <p class="text-sm opacity-70 mb-3">📖 Read the definition and guess the phrase:</p>
+      <div class="rounded-xl p-4 mb-4" style="background:#f9f3e8;border-left:4px solid var(--accent)">
+        <p class="font-700 text-lg leading-relaxed" style="color:var(--dark)">${q.vocab.enDef}</p>
+      </div>
+      <p class="text-xs opacity-60">Choose the correct English word/phrase:</p>
+    </div>
+    <div class="space-y-3" id="optionsArea">
+      ${q.options.map((o,i)=>`<button class="option-btn" onclick="checkMC(${q.correctId},${o.id},this)">${String.fromCharCode(65+i)}. ${o.en}</button>`).join('')}
+    </div>`;
+  }
+  lucide.createIcons();
+}
+
+function bumpScore(){
+  score++;
+  const tag=document.getElementById('scoreTag');
+  if(tag){tag.textContent=`Score: ${score}/${currentQ}`;tag.classList.remove('score-pop');void tag.offsetWidth;tag.classList.add('score-pop');}
+}
+
+function checkMC(correctId,chosenId,btn){
+  if(answered)return;answered=true;
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach(b=>{b.style.pointerEvents='none';});
+  if(chosenId===correctId){
+    btn.classList.add('correct');bumpScore();playDing();showConfetti();
+    showToast('✅ Chính xác!','success');
+  }else{
+    btn.classList.add('wrong');playBuzz();
+    btns.forEach(b=>{if(b.textContent.includes(VOCAB.find(v=>v.id===correctId).en))b.classList.add('correct')});
+    showToast('❌ Sai rồi!','error');
+  }
+  showExplanation(gameQuestions[currentQ].vocab);showNextBtn();
+}
+
+function checkFIB(){
+  if(answered)return;
+  const inp=document.getElementById('fibInput');
+  const val=inp.value.trim().toLowerCase();
+  const q=gameQuestions[currentQ];
+  const correct=q.vocab.en.toLowerCase();
+  const alts=[correct];
+  answered=true;
+  if(alts.some(a=>val===a||val===a.replace(/\s+/g,' '))||correct.includes(val)&&val.length>3){
+    inp.style.borderColor='var(--success)';inp.style.background='#d4edda';bumpScore();playDing();showConfetti();
+    showToast('✅ Chính xác!','success');
+  }else{
+    inp.style.borderColor='var(--error)';inp.style.background='#f8d7da';playBuzz();
+    showToast(`Đáp án: ${q.vocab.en}`,'error');
+  }
+  showExplanation(q.vocab);showNextBtn();
+}
+
+function checkSentence(){
+  if(answered)return;
+  const inp=document.getElementById('fibInput');
+  const val=inp.value.trim().toLowerCase();
+  const q=gameQuestions[currentQ];
+  const word=q.vocab.en.toLowerCase().split('/')[0].trim();
+  const words=[word];
+  answered=true;
+  if(words.some(w=>val===w||val.includes(w)&&val.length>3)){
+    inp.style.borderColor='var(--success)';inp.style.background='#d4edda';bumpScore();playDing();showConfetti();
+    showToast('✅ Chính xác!','success');
+  }else{
+    inp.style.borderColor='var(--error)';inp.style.background='#f8d7da';playBuzz();
+    showToast(`Đáp án: ${q.vocab.en}`,'error');
+  }
+  showExplanation(q.vocab);showNextBtn();
+}
+
+function showNextBtn(){
+  document.getElementById('nextBtnArea').innerHTML=`<button onclick="nextQuestion()" class="btn-primary text-lg px-8 next-btn-enter">Câu tiếp theo →</button>`;
+}
+
+function nextQuestion(){
+  const area=document.getElementById('questionArea');
+  if(area){area.style.transition='opacity .15s ease, transform .15s ease';area.style.opacity='0';area.style.transform='translateX(-20px)';}
+  setTimeout(()=>{currentQ++;answered=false;renderGame(document.getElementById('app'));},150);
+}
+
+function showExplanation(v){
+  document.getElementById('explanationArea').innerHTML=`
+  <div class="rounded-2xl p-5 fade-in" style="background:#f0f8ff;border:2px solid #d0e8f0">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="font-700 text-lg" style="color:var(--accent)">📖 Deep Dive: Chi tiết từ vựng</span>
+      <button onclick="speakWord('${v.en.replace(/'/g,"\\'")}')" class="p-1 rounded-full icon-spin" style="background:var(--pink);transition:transform .2s ease"><i data-lucide="volume-2" style="width:14px;height:14px"></i></button>
+    </div>
+
+    <!-- WORD HEADER -->
+    <div class="p-4 rounded-xl mb-4" style="background:linear-gradient(135deg,#457B9D15 0%,#FFAFCC15 100%);border:1px solid var(--accent)">
+      <p class="font-800 text-xl" style="color:var(--dark)">${v.en}</p>
+      <p class="text-xs opacity-70 mt-1">${v.ipa} <span class="tag" style="background:var(--accent);color:#fff">${v.pos}</span></p>
+    </div>
+
+    <!-- MEANING -->
+    <div class="mb-4">
+      <p class="text-sm font-700 mb-2" style="color:#fff;background:var(--accent);padding:8px 12px;border-radius:8px;display:inline-block">🟢 MEANING (Nghĩa)</p>
+      <div class="mt-3 space-y-2">
+        <div class="p-3 rounded-lg" style="background:#fff;border-left:4px solid #28a745">
+          <p class="text-xs opacity-60 mb-1">🇻🇳 Tiếng Việt:</p>
+          <p class="font-600" style="color:var(--dark)">${v.vi}</p>
+        </div>
+        <div class="p-3 rounded-lg" style="background:#fff;border-left:4px solid #007bff">
+          <p class="text-xs opacity-60 mb-1">🇬🇧 English Definition:</p>
+          <p class="text-sm leading-relaxed">${v.enDef}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLLOCATIONS -->
+    <div class="mb-4 p-3 rounded-lg" style="background:#fff;border:1px solid #ffc107">
+      <p class="text-sm font-700 mb-2" style="color:#856404">🔗 COLLOCATIONS - Kết hợp từ thường gặp</p>
+      <div class="space-y-2">
+        ${v.collocations.map((col,i)=>`<div class="text-sm"><span style="background:var(--bg);padding:2px 8px;border-radius:6px;font-weight:600">${col}</span> <span style="opacity:.7">${v.collocationVi[i]}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- SYNONYMS -->
+    <div class="mb-4 p-3 rounded-lg" style="background:#fff;border:1px solid #17a2b8">
+      <p class="text-sm font-700 mb-2" style="color:#0c5460">↔️ SYNONYMS - Từ đồng nghĩa</p>
+      <div class="space-y-2">
+        ${v.synonyms.map((syn,i)=>`<div class="text-sm"><span style="background:#e2f4f8;padding:2px 8px;border-radius:6px;font-weight:600">${syn}</span> <span style="opacity:.7">${v.synonymsVi[i]}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- ANTONYMS -->
+    <div class="mb-4 p-3 rounded-lg" style="background:#fff;border:1px solid #dc3545">
+      <p class="text-sm font-700 mb-2" style="color:#721c24">⚖️ ANTONYMS - Từ trái nghĩa</p>
+      <div class="space-y-2">
+        ${v.antonyms.map((ant,i)=>`<div class="text-sm"><span style="background:#f8d7da;padding:2px 8px;border-radius:6px;font-weight:600">${ant}</span> <span style="opacity:.7">${v.antonymsVi[i]}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- WORD FAMILY -->
+    <div class="mb-4 p-3 rounded-lg" style="background:#fff;border:1px solid #6f42c1">
+      <p class="text-sm font-700 mb-2" style="color:#3e1f47">👨‍👩‍👧 WORD FAMILY - Họ từ liên quan</p>
+      <div class="space-y-2">
+        ${v.wordFamily.map((wf,i)=>`<div class="text-sm"><span style="background:#e7d4f5;padding:2px 8px;border-radius:6px;font-weight:600">${wf}</span> <span style="opacity:.7">${v.wordFamilyVi[i]}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- USAGE (if available) -->
+    ${v.usage?`<div class="mb-4 p-3 rounded-lg" style="background:#fff;border:1px solid var(--accent)">
+      <p class="text-sm font-700 mb-2" style="color:var(--dark)">💡 USAGE - Cách dùng</p>
+      <p class="text-sm p-2 rounded" style="background:#f9f9f9;color:var(--dark)">${v.usage}</p>
+    </div>`:''}
+
+    <!-- EXAMPLE -->
+    <div class="p-4 rounded-lg" style="background:#fff3cd;border:2px solid #ffc107">
+      <p class="text-sm font-700 mb-3" style="color:#856404">📝 REAL-WORLD EXAMPLE - Ví dụ thực tế</p>
+      <div class="mb-3 p-3 rounded" style="background:#fff;border-left:4px solid #ffc107">
+        <p class="text-sm italic font-600 mb-2" style="color:var(--dark)">English:</p>
+        <p class="text-sm leading-relaxed">${v.example}</p>
+      </div>
+      <div class="p-3 rounded" style="background:#fff;border-left:4px solid var(--accent)">
+        <p class="text-sm italic font-600 mb-2" style="color:var(--dark)">Tiếng Việt:</p>
+        <p class="text-sm leading-relaxed" style="color:var(--accent)">${v.exampleVi}</p>
+      </div>
+    </div>
+  </div>`;
+  lucide.createIcons();
+}
+
+function renderResult(app){
+  const total=gameQuestions.length;
+  const pct=Math.round(score/total*100);
+  const emoji=pct>=80?'🏆':pct>=60?'👍':pct>=40?'💪':'📖';
+  const msg=pct>=80?'Xuất sắc!':pct>=60?'Khá tốt!':pct>=40?'Cần ôn thêm!':'Hãy cố gắng hơn!';
+  if(pct>=80)showConfetti(true);
+  app.innerHTML=`
+  <div class="flex flex-col items-center justify-center min-h-full p-6 fade-in">
+    <div class="text-6xl mb-4 bounce-in">${emoji}</div>
+    <h2 class="text-3xl font-800 mb-2" style="color:var(--dark)">${msg}</h2>
+    <p class="text-lg mb-6 opacity-70">Điểm: ${score}/${total} (${pct}%)</p>
+    <div class="w-full max-w-xs mb-6"><div class="progress-bar" style="height:12px"><div class="progress-fill" style="width:${pct}%"></div></div></div>
+    <div class="space-y-3 w-full max-w-xs">
+      <button onclick="startGame(${currentGame})" class="btn-primary w-full">🔄 Chơi lại</button>
+      <button onclick="currentScreen='home';render()" class="btn-pink w-full">🏠 Về trang chủ</button>
+    </div>
+  </div>`;
+}
+
+// ===== VOCAB LIST =====
+function renderVocabList(app){
+  app.innerHTML=`
+  <div class="min-h-full p-4 fade-in">
+    <div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-3 mb-4">
+        <button onclick="currentScreen='home';render()" class="p-2 rounded-lg" style="background:#fff"><i data-lucide="arrow-left" style="width:20px;height:20px"></i></button>
+        <h2 class="text-xl font-700" style="color:var(--dark)">📘 Từ vựng đầy đủ (${VOCAB.length} từ)</h2>
+      </div>
+      <input id="vocabSearch" class="input-field mb-4" placeholder="🔍 Tìm kiếm từ vựng..." oninput="filterVocab(this.value)">
+      <div id="vocabContainer">${renderVocabCards(VOCAB)}</div>
+    </div>
+  </div>`;
+  lucide.createIcons();
+}
+
+function renderVocabCards(list){
+  return list.map((v,idx)=>`
+  <div class="vocab-card card-hover fade-in" style="animation-delay:${Math.min(idx*0.04,0.6)}s">
+    <div class="flex items-start justify-between mb-2">
+      <div>
+        <span class="font-700 text-lg" style="color:var(--dark)">${v.en}</span>
+        <span class="ml-2 text-sm opacity-60">${v.ipa}</span>
+        <span class="tag ml-2" style="background:var(--bg)">${v.pos}</span>
+      </div>
+      <button onclick="speakWord('${v.en.replace(/'/g,"\\'")}')" class="p-1 rounded-full flex-shrink-0" style="background:var(--pink)"><i data-lucide="volume-2" style="width:16px;height:16px"></i></button>
+    </div>
+    <p class="font-600 mb-1" style="color:var(--accent)">${v.vi}</p>
+    <p class="text-sm opacity-70 mb-2">${v.enDef}</p>
+    ${v.usage?`<p class="text-sm mb-2" style="color:var(--accent)">💡 ${v.usage}</p>`:''}
+    <details class="mt-2">
+      <summary class="text-sm font-600 cursor-pointer" style="color:var(--accent)">Xem chi tiết ▾</summary>
+      <div class="mt-2 space-y-1 text-sm pl-2" style="border-left:2px solid var(--bg)">
+        <p><strong>Collocations:</strong> ${v.collocations.join(', ')}</p>
+        <p><strong>Synonyms:</strong> ${v.synonyms.join(', ')}</p>
+        <p><strong>Antonyms:</strong> ${v.antonyms.join(', ')}</p>
+        <p><strong>Word family:</strong> ${v.wordFamily.join(', ')}</p>
+        <p class="mt-1 p-2 rounded-lg" style="background:#f8f9fa"><strong>Example:</strong> ${v.example}</p>
+        <p class="p-2 rounded-lg" style="background:#f0f8ff;color:var(--accent)"><strong>Dịch:</strong> ${v.exampleVi}</p>
+      </div>
+    </details>
+  </div>`).join('');
+}
+
+function filterVocab(term){
+  const t=term.toLowerCase();
+  const filtered=VOCAB.filter(v=>v.en.toLowerCase().includes(t)||v.vi.toLowerCase().includes(t)||v.enDef.toLowerCase().includes(t));
+  document.getElementById('vocabContainer').innerHTML=renderVocabCards(filtered);
+  lucide.createIcons();
+}
+
+// ===== START =====
+render();
+  </script>
+ </body>
+</html>
